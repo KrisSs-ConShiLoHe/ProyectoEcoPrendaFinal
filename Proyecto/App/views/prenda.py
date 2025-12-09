@@ -86,7 +86,7 @@ def lista_prendas(request):
 def detalle_prenda(request, id_prenda):
     """Detalle de prenda con impacto ambiental y equivalencias."""
     usuario = get_usuario_actual(request)
-    prenda = get_object_or_404(Prenda, id=id_prenda)
+    prenda = get_object_or_404(Prenda, id_prenda=id_prenda)
     impacto_obj = ImpactoAmbiental.objects.filter(prenda=prenda).first()
     
     if impacto_obj:
@@ -107,7 +107,7 @@ def detalle_prenda(request, id_prenda):
     return render(request, 'prendas/detalle_prenda.html', context)
 
 @cliente_only
-def crear_prenda(request, id_prenda):
+def crear_prenda(request):
     """Permite al cliente crear una nueva prenda con detección automática."""
     usuario = get_usuario_actual(request)
     
@@ -171,13 +171,13 @@ def crear_prenda(request, id_prenda):
                         print(f"Error al analizar con Clarifai: {e}")
                         # Continuar sin análisis
             except CloudinaryError as e:
-                # Cloudinary no está configurado (desarrollo local)
-                messages.warning(
-                    request,
-                    "La imagen no se pudo subir porque Cloudinary no está configurado en desarrollo local. "
-                    "La prenda se creó correctamente sin imagen."
-                )
-                logger.warning(f"Cloudinary no configurado: {str(e)}")
+                # Cloudinary no está configurado (desarrollo local) - usar almacenamiento local
+                try:
+                    prenda.imagen_prenda = imagen
+                    prenda.save()
+                    logger.info(f"Imagen guardada localmente para prenda {prenda.id_prenda} (Cloudinary no disponible)")
+                except Exception as local_error:
+                    logger.warning(f"Error guardando imagen localmente: {str(local_error)}")
         
         # Calcular impacto ambiental
         impacto = calcular_impacto_prenda(categoria=categoria, peso_kg=None)
@@ -209,7 +209,7 @@ def crear_prenda(request, id_prenda):
 def editar_prenda(request, id_prenda):
     """Permite al cliente editar una de sus prendas."""
     usuario = get_usuario_actual(request)
-    prenda = get_object_or_404(Prenda, id=id_prenda)
+    prenda = get_object_or_404(Prenda, id_prenda=id_prenda)
     if prenda.user.id_usuario != usuario.id_usuario:
         messages.error(request, 'No tienes permiso para editar esta prenda.')
         return redirect('detalle_prenda', id_prenda=prenda.id_prenda)
@@ -250,7 +250,7 @@ def editar_prenda(request, id_prenda):
 def eliminar_prenda(request, id_prenda):
     """Permite eliminar una prenda propia del usuario cliente."""
     usuario = get_usuario_actual(request)
-    prenda = get_object_or_404(Prenda, id=id_prenda)
+    prenda = get_object_or_404(Prenda, id_prenda=id_prenda)
     if prenda.user.id_usuario != usuario.id_usuario:
         messages.error(request, 'No tienes permiso para eliminar esta prenda.')
         return redirect('detalle_prenda', id_prenda=prenda.id_prenda)

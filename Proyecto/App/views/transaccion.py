@@ -47,6 +47,8 @@ from ..carbon_utils import (
 )
 
 from ..forms import RegistroForm, PerfilForm, PrendaForm
+from .auth import get_usuario_actual, puede_actualizar_transaccion
+from .logro import verificar_logros
 
 # Configuración de logging
 logger = logging.getLogger(__name__)
@@ -58,7 +60,7 @@ logger = logging.getLogger(__name__)
 def proponer_intercambio(request, id_prenda):
     """Permite a un usuario proponer un intercambio por otra prenda."""
     usuario = get_usuario_actual(request)
-    prenda_destino = get_object_or_404(Prenda.objects.select_related('user'), id=id_prenda)  # Cambiado: 'pk=id_prenda', agregado select_related
+    prenda_destino = get_object_or_404(Prenda.objects.select_related('user'), id_prenda=id_prenda)  # Cambiado: 'pk=id_prenda', agregado select_related
 
     if prenda_destino.user.id == usuario.id_usuario:  # Cambiado: 'prenda_destino.user.id == usuario.id'
         messages.error(request, 'No puedes intercambiar con tu propia prenda.')
@@ -97,7 +99,7 @@ def proponer_intercambio(request, id_prenda):
         'prenda_destino': prenda_destino,
         'mis_prendas': mis_prendas_usuario,
     }
-    return render(request, 'proponer_intercambio.html', context)
+    return render(request, 'transacciones/proponer_intercambio.html', context)
 
 @login_required_custom
 def marcar_intercambio_entregado(request, id_transaccion):
@@ -160,7 +162,7 @@ def cancelar_intercambio(request, id_transaccion):
 def comprar_prenda(request, id_prenda):
     """Proponer compra de una prenda."""
     usuario = get_usuario_actual(request)
-    prenda = get_object_or_404(Prenda.objects.select_related('user'), id=id_prenda)  # Cambiado: agregado select_related
+    prenda = get_object_or_404(Prenda.objects.select_related('user'), id_prenda=id_prenda)  # Cambiado: agregado select_related
     
     if prenda.user.id == usuario.id_usuario:  # Cambiado: 'prenda.user.id == usuario.id'
         messages.error(request, "No puedes comprar tu propia prenda.")
@@ -189,7 +191,7 @@ def comprar_prenda(request, id_prenda):
             messages.error(request, 'Error interno. Intenta nuevamente.')
     
     context = {"usuario": usuario, "prenda": prenda}
-    return render(request, 'comprar_prenda.html', context)
+    return render(request, 'transacciones/comprar_prenda.html', context)
 
 @login_required_custom
 def marcar_compra_entregado(request, id_transaccion):
@@ -316,7 +318,7 @@ def donar_prenda(request, id_prenda):
         'prenda': prenda,
         'fundaciones': fundaciones,
     }
-    return render(request, 'donar_prenda.html', context)
+    return render(request, 'transacciones/donar_prenda.html', context)
 
 @login_required_custom
 def mis_transacciones(request):
@@ -337,7 +339,7 @@ def mis_transacciones(request):
         "transacciones_enviadas": transacciones_enviadas,
         "transacciones_recibidas": transacciones_recibidas,
     }
-    return render(request, 'mis_transacciones.html', context)
+    return render(request, 'transacciones/mis_transacciones.html', context)
 
 @login_required_custom
 def actualizar_estado_transaccion(request, id_transaccion):
@@ -422,7 +424,7 @@ def reportar_disputa(request, id_transaccion):
         'usuario': usuario,
         'transaccion': transaccion,
     }
-    return render(request, 'reportar_disputa.html', context)
+    return render(request, 'reportes/reportar_disputa.html', context)
 
 @admin_required
 def resolver_disputa(request, id_transaccion):
@@ -459,4 +461,4 @@ def resolver_disputa(request, id_transaccion):
         'transaccion': transaccion,
         'mensajes': mensajes,
     }
-    return render(request, 'admin_resolver_disputa.html', context)
+    return render(request, 'reportes/admin_resolver_disputa.html', context)

@@ -254,7 +254,7 @@ def actualizar_foto_perfil(request):
 def actualizar_imagen_prenda(request, id_prenda):
     """Actualiza la imagen de una prenda del usuario."""
     usuario = get_usuario_actual(request)
-    prenda = get_object_or_404(Prenda, id=id_prenda, user=usuario)
+    prenda = get_object_or_404(Prenda, id_prenda=id_prenda, user=usuario)
     if request.method == 'POST' and 'imagen_prenda' in request.FILES:
         prenda.imagen_prenda = request.FILES['imagen_prenda']
         prenda.save()
