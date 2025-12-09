@@ -46,7 +46,8 @@ from ..carbon_utils import (
     formatear_equivalencia
 )
 
-from .forms import RegistroForm, PerfilForm, PrendaForm
+from ..forms import RegistroForm, PerfilForm, PrendaForm
+from .auth import get_usuario_actual
 
 # Configuración de logging
 logger = logging.getLogger(__name__)
@@ -106,7 +107,7 @@ def panel_impacto(request):
         'equivalencias': impacto_plataforma.get('equivalencias', {}),
     }
     
-    return render(request, 'panel_impacto.html', context)
+    return render(request, 'impacto ambiental/panel_impacto.html', context)
 
 @login_required_custom
 def mi_impacto(request):
@@ -151,4 +152,4 @@ def mi_impacto(request):
         'ranking': ranking,
     }
     
-    return render(request, 'mi_impacto.html', context)
+    return render(request, 'impacto ambiental/mi_impacto.html', context)

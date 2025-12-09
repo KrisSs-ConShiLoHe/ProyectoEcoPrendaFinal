@@ -9,7 +9,7 @@ def login_required_custom(function):
     """Decorador personalizado para requerir login"""
     @wraps(function)
     def wrap(request, *args, **kwargs):
-        usuario_id = request.session.get('usuario_id')
+        usuario_id = request.session.get('id_usuario')
         if not usuario_id:
             messages.warning(request, 'Debes iniciar sesión para acceder a esta página.')
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -30,7 +30,7 @@ def representante_fundacion_required(function):
     """Decorador para representantes de fundación"""
     @wraps(function)
     def wrap(request, *args, **kwargs):
-        usuario_id = request.session.get('usuario_id')
+        usuario_id = request.session.get('id_usuario')
         if not usuario_id:
             messages.warning(request, 'Debes iniciar sesión.')
             return redirect('login')
@@ -55,7 +55,7 @@ def moderador_required(function):
     """Decorador para moderadores (solo acceso desde admin)"""
     @wraps(function)
     def wrap(request, *args, **kwargs):
-        usuario_id = request.session.get('usuario_id')
+        usuario_id = request.session.get('id_usuario')
         if not usuario_id:
             messages.warning(request, 'Debes iniciar sesión.')
             return redirect('login')
@@ -80,7 +80,7 @@ def admin_required(function):
     """Decorador para administradores (solo acceso desde admin)"""
     @wraps(function)
     def wrap(request, *args, **kwargs):
-        usuario_id = request.session.get('usuario_id')
+        usuario_id = request.session.get('id_usuario')
         if not usuario_id:
             messages.warning(request, 'Debes iniciar sesión.')
             return redirect('login')
@@ -105,7 +105,7 @@ def cliente_only(function):
     """Decorador para funciones exclusivas de clientes"""
     @wraps(function)
     def wrap(request, *args, **kwargs):
-        usuario_id = request.session.get('usuario_id')
+        usuario_id = request.session.get('id_usuario')
         if not usuario_id:
             messages.warning(request, 'Debes iniciar sesión.')
             return redirect('login')
@@ -137,7 +137,7 @@ def anonymous_required(function):
     """Solo para usuarios NO logueados"""
     @wraps(function)
     def wrap(request, *args, **kwargs):
-        if request.session.get('usuario_id'):
+        if request.session.get('id_usuario'):
             messages.info(request, 'Ya has iniciado sesión.')
             return redirect('home')
         return function(request, *args, **kwargs)
@@ -148,7 +148,7 @@ def ajax_login_required(function):
     """Para endpoints AJAX que requieren autenticación"""
     @wraps(function)
     def wrap(request, *args, **kwargs):
-        usuario_id = request.session.get('usuario_id')
+        usuario_id = request.session.get('id_usuario')
         if not usuario_id:
             return JsonResponse({'error': 'No autenticado', 'message': 'Debes iniciar sesión'}, status=401)
         try:
@@ -166,7 +166,7 @@ def role_required(*roles):
     def decorator(function):
         @wraps(function)
         def wrap(request, *args, **kwargs):
-            usuario_id = request.session.get('usuario_id')
+            usuario_id = request.session.get('id_usuario')
             if not usuario_id:
                 messages.warning(request, 'Debes iniciar sesión.')
                 return redirect('login')

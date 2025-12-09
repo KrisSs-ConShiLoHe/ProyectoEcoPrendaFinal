@@ -5,11 +5,11 @@ from rest_framework.views import APIView
 from django.db.models import Sum, Count, Q
 from django.utils import timezone
 
-from .models import (
+from ..models import (
     Usuario, Prenda, Transaccion, TipoTransaccion,
     Fundacion, Mensaje, ImpactoAmbiental, Logro, UsuarioLogro, CampanaFundacion
 )
-from .serializers import (
+from ..serializers import (
     UsuarioSerializer, PrendaSerializer, TransaccionSerializer,
     TipoTransaccionSerializer, FundacionSerializer, MensajeSerializer,
     ImpactoAmbientalSerializer, EstadisticasSerializer, ImpactoTotalSerializer,

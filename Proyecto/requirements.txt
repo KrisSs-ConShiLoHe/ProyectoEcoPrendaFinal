@@ -7,6 +7,7 @@ dj-database-url==3.0.1
 requests==2.32.4
 boto3==1.42.0
 cryptography==46.0.3
+gunicorn==23.0.0
 
 # ==================== CLOUDINARY ====================
 # Gestión de imágenes en la nube
@@ -25,4 +26,10 @@ clarifai-grpc==10.0.9
 # 1. Copiar .env.example a .env
 # 2. Llenar las credenciales de APIs en .env
 # 3. NUNCA commitear .env (está en .gitignore)
+#
+# PARA RENDER:
+# 1. Conectar repo a Render
+# 2. Configurar DATABASE_URL con la BD PostgreSQL
+# 3. Agregar las variables de entorno en Render Dashboard
+# 4. El archivo render.yaml automáticamente ejecutará migraciones
 # ==============================================================================

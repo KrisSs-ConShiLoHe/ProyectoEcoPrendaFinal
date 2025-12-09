@@ -47,6 +47,7 @@ from ..carbon_utils import (
 )
 
 from ..forms import RegistroForm, PerfilForm, PrendaForm
+from .auth import get_usuario_actual
 
 # Configuración de logging
 logger = logging.getLogger(__name__)
@@ -58,7 +59,7 @@ logger = logging.getLogger(__name__)
 def lista_prendas(request):
     """Lista todas las prendas disponibles con opción de filtrado."""
     usuario = get_usuario_actual(request)
-    prendas = Prenda.objects.filter(disponibilidad='DISPONIBLE').order_by('-fecha_publicacion')
+    prendas = Prenda.objects.filter(estado='DISPONIBLE').order_by('-fecha_publicacion')
 
     categoria = request.GET.get('categoria')
     talla = request.GET.get('talla')
@@ -78,7 +79,7 @@ def lista_prendas(request):
         'tallas': ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
         'estados': ['Nuevo', 'Excelente', 'Bueno', 'Usado'],
     }
-    return render(request, 'lista_prendas.html', context)
+    return render(request, 'prendas/lista_prendas.html', context)
 
 @cliente_only
 def detalle_prenda(request, id_prenda):
@@ -286,7 +287,7 @@ def buscar_prendas(request):
     talla = request.GET.get('talla')
     estado = request.GET.get('estado')
 
-    prendas = Prenda.objects.filter(disponibilidad='DISPONIBLE')
+    prendas = Prenda.objects.filter(estado='DISPONIBLE')
     if query:
         prendas = prendas.filter(
             Q(nombre__icontains=query) |

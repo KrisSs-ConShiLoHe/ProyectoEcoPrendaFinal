@@ -139,12 +139,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Verificar si ya se configuraron las cookies
     const cookieConsent = getCookie('cookie_consent');
-    
+
     if (!cookieConsent) {
-        // Mostrar banner después de 1 segundo
-        setTimeout(() => {
-            document.getElementById('cookie-banner').style.display = 'block';
-        }, 1000);
+        // Mostrar banner inmediatamente
+        document.getElementById('cookie-banner').style.display = 'block';
     }
     
     // Aceptar todas las cookies

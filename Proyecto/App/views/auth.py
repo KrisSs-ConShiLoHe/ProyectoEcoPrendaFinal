@@ -91,7 +91,7 @@ def get_usuario_actual(request):
     id_usuario = request.session.get('id_usuario')
     if id_usuario:
         try:
-            return Usuario.objects.get(id=id_usuario)  # Cambiado: usa 'id' en lugar de 'id_usuario'
+            return Usuario.objects.get(id_usuario=id_usuario)
         except Usuario.DoesNotExist:
             return None
     return None
@@ -160,7 +160,7 @@ def registro_usuario(request):
                 messages.error(request, error)
     else:
         form = RegistroForm()
-    return render(request, 'registro.html', {'form': form})
+    return render(request, 'auth/registro.html', {'form': form})
 
 @anonymous_required
 def login_usuario(request):
@@ -169,7 +169,7 @@ def login_usuario(request):
         contrasena = request.POST.get('contrasena')
         if not correo or not contrasena:
             messages.error(request, 'Correo y contraseña son obligatorios.')
-            return render(request, 'login.html')
+            return render(request, 'auth/login.html')
         try:
             usuario = Usuario.objects.get(correo=correo)
             if verificar_password(contrasena, usuario.contrasena, usuario):
@@ -182,13 +182,15 @@ def login_usuario(request):
         except Usuario.DoesNotExist:
             logger.warning(f"Intento de login con correo inexistente: {correo}")
             messages.error(request, 'Usuario o contraseña incorrectos.')
-    return render(request, 'login.html')
+    return render(request, 'auth/login.html')
 
 @login_required_custom
 def logout_usuario(request):
     request.session.flush()
+    response = redirect('home')
+    response.delete_cookie('cookie_consent')  # Eliminar cookie de consentimiento al cerrar sesión
     messages.success(request, 'Sesión cerrada correctamente.')
-    return redirect('home')
+    return response
 
 @login_required_custom
 def perfil_usuario(request):
@@ -286,7 +288,7 @@ def session_info(request):
 
     if (not usuario_nombre or not usuario_correo) and id_usuario:
         try:
-            u = Usuario.objects.only('nombre', 'correo').get(id=id_usuario) 
+            u = Usuario.objects.only('nombre', 'correo').get(id_usuario=id_usuario)
             usuario_nombre = u.nombre
             usuario_correo = u.correo
             request.session['usuario_nombre'] = usuario_nombre

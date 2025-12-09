@@ -21,8 +21,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('A_EcoPrenda.urls')),
-    path('api/', include('A_EcoPrenda.api_urls')),
+    path('', include('App.urls')),
+    path('api/', include('App.api.api_urls')),
 ]
 
 # Servir archivos media en desarrollo

@@ -66,7 +66,6 @@ urlpatterns = [
     # Campañas
     path('crear-campana/', views.crear_campana, name='crear_campana'),
     path('mis-campanas/', views.mis_campanas, name='mis_campanas'),
-    path('campana/<int:id_campana>/actualizar-imagen/', views.actualizar_imagen_campana, name='actualizar_imagen_campana'),
     path('campanas-solidarias', views.campanas_solidarias, name='campanas_solidarias'),
     path('detalle-campana/', views.detalle_campana, name='detalle_campana'),
     path('donar-a-campana/', views.donar_a_campana, name='donar_a_campana'),
@@ -76,7 +75,6 @@ urlpatterns = [
 
     # Logros
     path('mis-logros/', views.mis_logros, name='mis_logros'),
-    path('recomendaciones/', views.recomendaciones, name='recomendaciones'),
 
     # Búsqueda y filtros
     path('buscar/', views.buscar_prendas, name='buscar_prendas'),
@@ -94,11 +92,12 @@ urlpatterns = [
     # Galería de imágenes
     path('galeria/', views.galeria_imagenes, name='galeria_imagenes'),
 
-    # Impacto Ambiental
+    # Impacto Ambiental - Reportes
     path('informe-impacto/', views.informe_impacto, name='informe_impacto'),
     path('comparador-impacto/', views.comparador_impacto, name='comparador_impacto'),
-    path('api/calcular-impacto/', views.api_calcular_impacto, name='api_calcular_impacto'),
 
+    # APIs
+    path('api/calcular-impacto/', views.api_calcular_impacto, name='api_calcular_impacto'),
     path('api/sugerir-categoria/', views.api_sugerir_categoria, name='api_sugerir_categoria'),
 
 ]

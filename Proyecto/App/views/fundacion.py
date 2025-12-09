@@ -47,6 +47,7 @@ from ..carbon_utils import (
 )
 
 from ..forms import RegistroForm, PerfilForm, PrendaForm
+from .auth import get_usuario_actual
 
 # Configuración de logging
 logger = logging.getLogger(__name__)
@@ -54,12 +55,12 @@ logger = logging.getLogger(__name__)
 def lista_fundaciones(request):
     """Lista todas las fundaciones registradas."""
     usuario = get_usuario_actual(request)
-    fundaciones = Fundacion.objects.filter(activa=True).select_related('representante')  # Agregado select_related
+    fundaciones = Fundacion.objects.filter(activa=True)
     context = {
         'usuario': usuario,
         'fundaciones': fundaciones,
     }
-    return render(request, 'lista_fundaciones.html', context)
+    return render(request, 'fundaciones/lista_fundaciones.html', context)
 
 def detalle_fundacion(request, id_fundacion):
     """Muestra información y estadísticas de una fundación."""
@@ -140,7 +141,7 @@ def gestionar_donaciones(request):
         'fundacion': fundacion,
         'donaciones': donaciones,
     }
-    return render(request, 'gestionar_donaciones.html', context)
+    return render(request, 'fundaciones/gestionar_donaciones.html', context)
 
 @representante_fundacion_required
 def confirmar_recepcion_donacion(request, id_transaccion):
@@ -240,7 +241,7 @@ def mapa_fundaciones(request):
         mostrar_en_mapa=True,
         lat__isnull=False,
         lng__isnull=False
-    ).values('id', 'nombre', 'comuna', 'lat', 'lng')
+    ).values('id_usuario', 'nombre', 'comuna', 'lat', 'lng')
     
     # Convertir QuerySets a listas para JSON
     fundaciones_list = list(fundaciones)
@@ -266,7 +267,7 @@ def mapa_fundaciones(request):
         'total_usuarios_visibles': len(usuarios_list),
     }
     
-    return render(request, 'mapa_fundaciones.html', context)
+    return render(request, 'fundaciones/mapa_fundaciones.html', context)
 
 
 @login_required_custom

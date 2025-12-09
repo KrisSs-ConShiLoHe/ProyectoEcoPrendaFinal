@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: ecoprenda-app
+    runtime: python
+    buildCommand: pip install -r Proyecto/requirements.txt && cd Proyecto && python manage.py migrate && python manage.py collectstatic --noinput
+    startCommand: cd Proyecto && gunicorn Proyecto.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: proyectoecoprenda-ykp.onrender.com
+      # Las siguientes deben agregarse manualmente en el dashboard de Render
+      # (o en un archivo .env local en desarrollo):
+      # - DATABASE_URL: Tu URL de PostgreSQL desde Render
+      # - GEOAPIFY_API_KEY: Tu clave de Geoapify
+      # - CLOUDINARY_CLOUD_NAME: Tu cloud name
+      # - CLOUDINARY_API_KEY: Tu API key
+      # - CLOUDINARY_API_SECRET: Tu API secret
+      # - CLARIFAI_PAT: Tu PAT token
+    healthCheckPath: /
