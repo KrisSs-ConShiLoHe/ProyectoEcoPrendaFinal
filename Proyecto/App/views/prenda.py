@@ -90,14 +90,8 @@ def detalle_prenda(request, id_prenda):
     prenda = get_object_or_404(Prenda, id=id_prenda)
     impacto_obj = ImpactoAmbiental.objects.filter(prenda=prenda).first()
     
-    # Calcular equivalencias si hay impacto
-    equivalencias = None
     if impacto_obj:
-        equivalencias = calcular_equivalencias(
-            carbono_kg=float(impacto_obj.carbono_evitar_kg or 0),
-            energia_kwh=float(impacto_obj.energia_ahorrada_kwh or 0),
-            agua_litros=5000  # Estimado
-        )
+        impacto = calcular_impacto_prenda(categoria=categoría, peso_kg=None)
     
     # Buscar transacción actual
     transaccion_actual = Transaccion.objects.filter(
@@ -243,7 +237,7 @@ def editar_prenda(request, id_prenda):
                 prenda.imagen_prenda = imagen
             prenda.save()
             messages.success(request, 'Prenda actualizada correctamente.')
-            return redirect('detalle_prenda', id_prenda=prenda.id)
+            return redirect('detalle_prenda', id_prenda=prenda.id_prenda)
 
     context = {
         'usuario': usuario,

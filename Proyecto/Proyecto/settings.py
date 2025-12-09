@@ -15,8 +15,12 @@ import os
 # Bases de datos
 import dj_database_url
 from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+LOG_DIR = BASE_DIR / 'logs'
+os.makedirs(LOG_DIR, exist_ok=True)
 
 # Carga las variables del archivo .env
 load_dotenv(os.path.join(BASE_DIR, '.env'))
@@ -246,12 +250,12 @@ LOGGING = {
         },
         'file': {
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs', 'ecoprenda.log'),
+            'filename': LOG_DIR / 'ecoprenda.log',
             'formatter': 'verbose',
         },
         'api_file': {
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs', 'apis.log'),
+            'filename': LOG_DIR / 'apis.log',
             'formatter': 'verbose',
         },
     },

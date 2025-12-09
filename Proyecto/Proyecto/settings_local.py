@@ -10,6 +10,9 @@ from pathlib import Path
 # Configuraciones básicas
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+LOG_DIR = BASE_DIR / 'logs'
+os.makedirs(LOG_DIR, exist_ok=True)
+
 # Forzar modo desarrollo
 DEBUG = True
 
@@ -154,7 +157,7 @@ LOGGING = {
         },
         'file': {
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs', 'ecoprenda.log'),
+            'filename': LOG_DIR / 'ecoprenda.log',
             'formatter': 'verbose',
         },
     },
