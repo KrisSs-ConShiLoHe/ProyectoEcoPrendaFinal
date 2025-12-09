@@ -47,7 +47,6 @@ from ..carbon_utils import (
     formatear_equivalencia
 )
 
-from ..forms import RegistroForm, PerfilForm, PrendaForm
 from ..clarifai_utils import analizar_imagen_completa
 from .auth import get_usuario_actual
 
