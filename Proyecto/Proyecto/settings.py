@@ -37,7 +37,7 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = ['proyectoecoprenda-ykp.onrender.com']
 
 
 CSRF_TRUSTED_ORIGINS = [
