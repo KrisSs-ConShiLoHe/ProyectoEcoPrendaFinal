@@ -90,7 +90,7 @@ def detalle_prenda(request, id_prenda):
     impacto_obj = ImpactoAmbiental.objects.filter(prenda=prenda).first()
     
     if impacto_obj:
-        impacto = calcular_impacto_prenda(categoria=categoría, peso_kg=None)
+        impacto = calcular_impacto_prenda(categoria=prenda.categoria, peso_kg=None)
     
     # Buscar transacción actual
     transaccion_actual = Transaccion.objects.filter(
@@ -102,7 +102,6 @@ def detalle_prenda(request, id_prenda):
         'usuario': usuario,
         'prenda': prenda,
         'impacto': impacto_obj,
-        'equivalencias': equivalencias,
         'transaccion_actual': transaccion_actual,
     }
     return render(request, 'prendas/detalle_prenda.html', context)

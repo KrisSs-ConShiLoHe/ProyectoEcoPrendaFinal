@@ -203,9 +203,10 @@ def perfil_usuario(request):
             if 'imagen_usuario' in request.FILES:
                 # Validar imagen antes de guardar
                 imagen = request.FILES['imagen_usuario']
-                if not validar_imagen(imagen):
-                    messages.error(request, 'Imagen inválida. Solo JPG/PNG, máximo 5MB.')
-                    return render(request, 'perfil.html', {'usuario': usuario, 'form': form})
+                es_valida, mensaje_error = validar_imagen(imagen)
+                if not es_valida:
+                    messages.error(request, mensaje_error or 'Imagen inválida. Solo JPG/PNG, máximo 5MB.')
+                    return render(request, 'auth/perfil.html', {'usuario': usuario, 'form': form})
             try:
                 form.save()
                 messages.success(request, 'Perfil actualizado correctamente.')
@@ -258,9 +259,9 @@ def actualizar_imagen_prenda(request, id_prenda):
         prenda.imagen_prenda = request.FILES['imagen_prenda']
         prenda.save()
         messages.success(request, 'Imagen de prenda actualizada.')
-        return redirect('detalle_prenda', id_prenda=prenda.id)
+        return redirect('detalle_prenda', id_prenda=getattr(prenda, 'id_prenda', getattr(prenda, 'id', prenda.pk)))
     messages.error(request, 'Sube una imagen válida.')
-    return redirect('editar_prenda', id_prenda=prenda.id)
+    return redirect('editar_prenda', id_prenda=getattr(prenda, 'id_prenda', getattr(prenda, 'id', prenda.pk)))
 
 @login_required_custom
 def actualizar_logo_fundacion(request, id_fundacion):
@@ -365,7 +366,7 @@ def session_status(request):
     usuario_nombre = request.session.get('usuario_nombre')
     if (not usuario_nombre) and id_usuario:
         try:
-            u = Usuario.objects.only('nombre').get(id=id_usuario)  
+            u = Usuario.objects.only('nombre').get(id_usuario=id_usuario)
             usuario_nombre = u.nombre
             request.session['usuario_nombre'] = usuario_nombre
         except Usuario.DoesNotExist:
