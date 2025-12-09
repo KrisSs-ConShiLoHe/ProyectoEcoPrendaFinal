@@ -24,8 +24,8 @@ from .decorators import (
     login_required_custom,
     ajax_login_required,
 )
-from .cloudinary_utils import subir_imagen_prenda
-from .clarifai_utils import sugerir_categoria_automatica
+from ..cloudinary_utils import subir_imagen_prenda
+from ..clarifai_utils import sugerir_categoria_automatica
 from .carbon_utils import (
     calcular_impacto_prenda,
     calcular_impacto_transaccion,

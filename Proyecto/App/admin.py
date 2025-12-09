@@ -47,7 +47,7 @@ class UsuarioAdmin(admin.ModelAdmin):
 
 @admin.register(Prenda)
 class PrendaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nombre', 'categoria', 'talla', 'estado', 'user', 'fecha_publicacion')  # Cambié 'id_prenda' a 'id', 'id_usuario' a 'user', eliminé 'disponibilidad' (unificada en estado).
+    list_display = ('id_prenda', 'nombre', 'categoria', 'talla', 'estado', 'user', 'fecha_publicacion')  # Cambié 'id_prenda' a 'id', 'id_usuario' a 'user', eliminé 'disponibilidad' (unificada en estado).
     search_fields = ('nombre', 'descripcion')
     list_filter = ('categoria', 'talla', 'estado', 'fecha_publicacion')
     ordering = ('-fecha_publicacion',)

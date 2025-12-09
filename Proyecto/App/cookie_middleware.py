@@ -42,7 +42,7 @@ class CookieConsentMiddleware:
                         }, status=403)
                     
                     # Renderizar página de consentimiento
-                    return render(request, 'cookie_consent_required.html', {
+                    return render(request, 'cookies/cookie_consent_required.html', {
                         'action_attempted': request.path,
                         'message': 'Debes configurar las preferencias de cookies antes de realizar esta acción.'
                     })
@@ -56,7 +56,7 @@ class CookieConsentMiddleware:
                 # Si no aceptó cookies esenciales, bloquear login
                 if not consent_data.get('esenciales', False):
                     if request.path in ['/login/', '/registro/'] and request.method == 'POST':
-                        return render(request, 'cookie_consent_required.html', {
+                        return render(request, 'cookies/cookie_consent_required.html', {
                             'message': 'Las cookies esenciales son necesarias para iniciar sesión.'
                         })
             except json.JSONDecodeError:

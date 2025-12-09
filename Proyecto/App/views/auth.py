@@ -235,7 +235,7 @@ def perfil_usuario(request):
         'impacto_personal': impacto_personal,
         'form': form,
     }
-    return render(request, 'perfil.html', context)
+    return render(request, 'auth/perfil.html', context)
 
 @login_required_custom
 def actualizar_foto_perfil(request):
@@ -253,14 +253,14 @@ def actualizar_foto_perfil(request):
 def actualizar_imagen_prenda(request, id_prenda):
     """Actualiza la imagen de una prenda del usuario."""
     usuario = get_usuario_actual(request)
-    prenda = get_object_or_404(Prenda, id_prenda=id_prenda, id_usuario=usuario)
+    prenda = get_object_or_404(Prenda, id=id_prenda, user=usuario)
     if request.method == 'POST' and 'imagen_prenda' in request.FILES:
         prenda.imagen_prenda = request.FILES['imagen_prenda']
         prenda.save()
         messages.success(request, 'Imagen de prenda actualizada.')
-        return redirect('detalle_prenda', id_prenda=prenda.id_prenda)
+        return redirect('detalle_prenda', id_prenda=prenda.id)
     messages.error(request, 'Sube una imagen válida.')
-    return redirect('editar_prenda', id_prenda=prenda.id_prenda)
+    return redirect('editar_prenda', id_prenda=prenda.id)
 
 @login_required_custom
 def actualizar_logo_fundacion(request, id_fundacion):
@@ -342,7 +342,7 @@ def session_info(request):
         'session_data': session_data,
     }
 
-    return render(request, 'session_info.html', context)
+    return render(request, 'auth/session_info.html', context)
 
 
 @ajax_login_required

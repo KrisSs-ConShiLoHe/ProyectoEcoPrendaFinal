@@ -37,14 +37,14 @@ class UsuarioLogroSerializer(serializers.ModelSerializer):
     logro = LogroSerializer(read_only=True)
     class Meta:
         model = UsuarioLogro
-        fields = ['id_usuario_logro', 'usuario', 'logro', 'fecha_desbloqueo']
+        fields = ['id', 'user', 'logro', 'fecha_desbloqueo']
 
 class CampanaFundacionSerializer(serializers.ModelSerializer):
-    fundacion_nombre = serializers.CharField(source='id_fundacion.nombre', read_only=True)
+    fundacion_nombre = serializers.CharField(source='fundacion.nombre', read_only=True)
     class Meta:
         model = CampanaFundacion
         fields = [
-            'id_campana', 'id_fundacion', 'fundacion_nombre', 'nombre',
+            'id', 'fundacion', 'fundacion_nombre', 'nombre',
             'descripcion', 'imagen', 'fecha_inicio', 'fecha_fin', 'objetivo_prendas', 'activa', 'categorias_solicitadas'
         ]
 
@@ -52,40 +52,40 @@ class CampanaFundacionSerializer(serializers.ModelSerializer):
 # --- Serializers anidados / personalizados ---
 
 class PrendaSerializer(serializers.ModelSerializer):
-    usuario_nombre = serializers.CharField(source='id_usuario.nombre', read_only=True)
-    usuario_apellido = serializers.CharField(source='id_usuario.apellido', read_only=True)
-    fundacion_nombre = serializers.CharField(source='id_usuario.fundacion_asignada.nombre', read_only=True)
+    usuario_nombre = serializers.CharField(source='user.nombre', read_only=True)
+    usuario_apellido = serializers.CharField(source='user.apellido', read_only=True)
+    fundacion_nombre = serializers.CharField(source='user.fundacion_asignada.nombre', read_only=True)
     impactoambiental = ImpactoAmbientalSerializer(source='impactoambiental_set', many=True, read_only=True)
     class Meta:
         model = Prenda
         fields = [
-            'id_prenda', 'id_usuario', 'usuario_nombre', 'usuario_apellido', 'fundacion_nombre',
+            'id', 'user', 'usuario_nombre', 'usuario_apellido', 'fundacion_nombre',
             'nombre', 'descripcion', 'categoria', 'talla', 'estado',
             'disponibilidad', 'fecha_publicacion', 'imagen_prenda', 'impactoambiental'
         ]
-        read_only_fields = ['id_prenda', 'fecha_publicacion']
+        read_only_fields = ['id', 'fecha_publicacion']
 
 class PrendaSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prenda
-        fields = ['id_prenda', 'nombre', 'categoria', 'talla', 'estado']
+        fields = ['id', 'nombre', 'categoria', 'talla', 'estado']
 
 class TransaccionSerializer(serializers.ModelSerializer):
-    prenda = PrendaSimpleSerializer(source='id_prenda', read_only=True)
-    tipo_nombre = serializers.CharField(source='id_tipo.nombre_tipo', read_only=True)
-    usuario_origen_nombre = serializers.CharField(source='id_usuario_origen.nombre', read_only=True)
-    usuario_destino_nombre = serializers.CharField(source='id_usuario_destino.nombre', read_only=True)
-    fundacion_nombre = serializers.CharField(source='id_fundacion.nombre', read_only=True)
-    campana_nombre = serializers.CharField(source='id_campana.nombre', read_only=True)
+    prenda = PrendaSimpleSerializer(source='prenda', read_only=True)
+    tipo_nombre = serializers.CharField(source='tipo.nombre_tipo', read_only=True)
+    usuario_origen_nombre = serializers.CharField(source='user_origen.nombre', read_only=True)
+    usuario_destino_nombre = serializers.CharField(source='user_destino.nombre', read_only=True)
+    fundacion_nombre = serializers.CharField(source='fundacion.nombre', read_only=True)
+    campana_nombre = serializers.CharField(source='campana.nombre', read_only=True)
     class Meta:
         model = Transaccion
         fields = [
-            'id_transaccion', 'id_prenda', 'prenda', 'id_tipo', 'tipo_nombre',
-            'id_usuario_origen', 'usuario_origen_nombre', 'id_usuario_destino', 'usuario_destino_nombre',
-            'id_fundacion', 'fundacion_nombre', 'id_campana', 'campana_nombre',
+            'id', 'prenda', 'tipo', 'tipo_nombre',
+            'user_origen', 'usuario_origen_nombre', 'user_destino', 'usuario_destino_nombre',
+            'fundacion', 'fundacion_nombre', 'campana', 'campana_nombre',
             'fecha_transaccion', 'estado'
         ]
-        read_only_fields = ['id_transaccion', 'fecha_transaccion']
+        read_only_fields = ['id', 'fecha_transaccion']
 
 class MensajeSerializer(serializers.ModelSerializer):
     emisor_nombre = serializers.CharField(source='id_emisor.nombre', read_only=True)

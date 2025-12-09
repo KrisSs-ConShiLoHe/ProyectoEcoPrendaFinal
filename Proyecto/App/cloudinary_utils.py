@@ -21,20 +21,20 @@ class CloudinaryError(Exception):
 def subir_imagen_cloudinary(imagen, carpeta='ecoprenda', public_id=None, transformaciones=None):
     """
     Sube una imagen a Cloudinary con opciones de transformación.
-    
+
     Args:
         imagen: Archivo de imagen (UploadedFile de Django)
         carpeta: Carpeta en Cloudinary donde guardar (default: 'ecoprenda')
         public_id: ID público personalizado (opcional)
         transformaciones: Dict con transformaciones a aplicar
-    
+
     Returns:
         dict: Respuesta de Cloudinary con URL, public_id, etc.
         None: Si hay error
-    
+
     Raises:
         CloudinaryError: Si hay error en la subida
-    
+
     Ejemplo:
         resultado = subir_imagen_cloudinary(
             imagen=request.FILES['imagen_prenda'],
@@ -42,11 +42,16 @@ def subir_imagen_cloudinary(imagen, carpeta='ecoprenda', public_id=None, transfo
             transformaciones={'width': 800, 'height': 600, 'crop': 'fill'}
         )
     """
-    
+
+    # Verificar si Cloudinary está configurado
+    if not settings.CLOUDINARY_STORAGE.get('API_KEY'):
+        logger.warning("Cloudinary no está configurado. Usando almacenamiento local.")
+        raise CloudinaryError("Cloudinary no está configurado para desarrollo local")
+
     if not imagen:
         logger.error("Intento de subir imagen vacía")
         raise CloudinaryError("No se proporcionó imagen")
-    
+
     try:
         # Opciones base
         opciones = {

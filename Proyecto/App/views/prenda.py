@@ -34,7 +34,8 @@ from ..cloudinary_utils import (
     subir_imagen_campana,
     validar_imagen,
     eliminar_imagen_cloudinary,
-    extraer_public_id_de_url
+    extraer_public_id_de_url,
+    CloudinaryError
 )
 
 from ..carbon_utils import (
@@ -47,6 +48,7 @@ from ..carbon_utils import (
 )
 
 from ..forms import RegistroForm, PerfilForm, PrendaForm
+from ..clarifai_utils import analizar_imagen_completa
 from .auth import get_usuario_actual
 
 # Configuración de logging
@@ -85,13 +87,12 @@ def lista_prendas(request):
 def detalle_prenda(request, id_prenda):
     """Detalle de prenda con impacto ambiental y equivalencias."""
     usuario = get_usuario_actual(request)
-    prenda = get_object_or_404(Prenda, id_prenda=id_prenda)
-    impacto_obj = ImpactoAmbiental.objects.filter(id_prenda=prenda).first()
+    prenda = get_object_or_404(Prenda, id=id_prenda)
+    impacto_obj = ImpactoAmbiental.objects.filter(prenda=prenda).first()
     
     # Calcular equivalencias si hay impacto
     equivalencias = None
     if impacto_obj:
-        from .carbon_utils import calcular_equivalencias
         equivalencias = calcular_equivalencias(
             carbono_kg=float(impacto_obj.carbono_evitar_kg or 0),
             energia_kwh=float(impacto_obj.energia_ahorrada_kwh or 0),
@@ -100,7 +101,7 @@ def detalle_prenda(request, id_prenda):
     
     # Buscar transacción actual
     transaccion_actual = Transaccion.objects.filter(
-        id_prenda=prenda,
+        prenda=prenda,
         estado__in=['PENDIENTE', 'RESERVADA', 'EN_PROCESO']
     ).order_by('-fecha_transaccion').first()
 
@@ -111,10 +112,10 @@ def detalle_prenda(request, id_prenda):
         'equivalencias': equivalencias,
         'transaccion_actual': transaccion_actual,
     }
-    return render(request, 'detalle_prenda.html', context)
+    return render(request, 'prendas/detalle_prenda.html', context)
 
 @cliente_only
-def crear_prenda(request):
+def crear_prenda(request, id_prenda):
     """Permite al cliente crear una nueva prenda con detección automática."""
     usuario = get_usuario_actual(request)
     
@@ -137,7 +138,6 @@ def crear_prenda(request):
         
         # Validar imagen si se proporciona
         if imagen:
-            from .cloudinary_utils import validar_imagen
             es_valida, mensaje_error = validar_imagen(imagen)
             if not es_valida:
                 messages.error(request, mensaje_error)
@@ -145,7 +145,7 @@ def crear_prenda(request):
         
         # Crear prenda
         prenda = Prenda.objects.create(
-            id_usuario=usuario,
+            user=usuario,
             nombre=nombre,
             descripcion=descripcion,
             categoria=categoria,
@@ -156,45 +156,53 @@ def crear_prenda(request):
         
         # Subir imagen a Cloudinary si existe
         if imagen:
-            from .cloudinary_utils import subir_imagen_prenda
-            resultado = subir_imagen_prenda(imagen, prenda.id_prenda)
-            if resultado and resultado.get('secure_url'):
-                prenda.imagen_prenda = resultado['secure_url']
-                prenda.save()
-                
-                # ✨ ANÁLISIS CON CLARIFAI ✨
-                try:
-                    analisis = analizar_imagen_completa(imagen_url=resultado['secure_url'])
-                    
-                    # Si la categoría sugerida es diferente, avisar al usuario
-                    if analisis['categoria_sugerida'] and analisis['categoria_sugerida'] != categoria:
-                        if analisis['confianza'] >= 0.7:
-                            messages.warning(
-                                request,
-                                f"Clarifai detectó que podría ser '{analisis['categoria_sugerida']}' "
-                                f"con {analisis['confianza']*100:.0f}% de confianza. "
-                                f"Puedes editar la categoría si lo deseas."
-                            )
-                except Exception as e:
-                    print(f"Error al analizar con Clarifai: {e}")
-                    # Continuar sin análisis
+            try:
+                resultado = subir_imagen_prenda(imagen, prenda.id_prenda)
+                if resultado and resultado.get('secure_url'):
+                    prenda.imagen_prenda = resultado['secure_url']
+                    prenda.save()
+
+                    # ✨ ANÁLISIS CON CLARIFAI ✨
+                    try:
+                        analisis = analizar_imagen_completa(imagen_url=resultado['secure_url'])
+
+                        # Si la categoría sugerida es diferente, avisar al usuario
+                        if analisis['categoria_sugerida'] and analisis['categoria_sugerida'] != categoria:
+                            if analisis['confianza'] >= 0.7:
+                                messages.warning(
+                                    request,
+                                    f"Clarifai detectó que podría ser '{analisis['categoria_sugerida']}' "
+                                    f"con {analisis['confianza']*100:.0f}% de confianza. "
+                                    f"Puedes editar la categoría si lo deseas."
+                                )
+                    except Exception as e:
+                        print(f"Error al analizar con Clarifai: {e}")
+                        # Continuar sin análisis
+            except CloudinaryError as e:
+                # Cloudinary no está configurado (desarrollo local)
+                messages.warning(
+                    request,
+                    "La imagen no se pudo subir porque Cloudinary no está configurado en desarrollo local. "
+                    "La prenda se creó correctamente sin imagen."
+                )
+                logger.warning(f"Cloudinary no configurado: {str(e)}")
         
         # Calcular impacto ambiental
         impacto = calcular_impacto_prenda(categoria=categoria, peso_kg=None)
         
         # Guardar impacto en la base de datos
         ImpactoAmbiental.objects.create(
-            id_prenda=prenda,
+            prenda=prenda,
             carbono_evitar_kg=impacto['carbono_evitado_kg'],
             energia_ahorrada_kwh=impacto['energia_ahorrada_kwh'],
             fecha_calculo=timezone.now()
         )
         
         messages.success(
-            request, 
+            request,
             f'¡Prenda publicada! Evitarás {impacto["carbono_evitado_kg"]} kg de CO₂ al reutilizarla.'
         )
-        
+
         return redirect('detalle_prenda', id_prenda=prenda.id_prenda)
 
     context = {
@@ -203,14 +211,14 @@ def crear_prenda(request):
         'tallas': ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
         'estados': ['Nuevo', 'Excelente', 'Bueno', 'Usado'],
     }
-    return render(request, 'crear_prenda.html', context)
+    return render(request, 'prendas/crear_prenda.html', context)
 
 @cliente_only
 def editar_prenda(request, id_prenda):
     """Permite al cliente editar una de sus prendas."""
     usuario = get_usuario_actual(request)
-    prenda = get_object_or_404(Prenda, id_prenda=id_prenda)
-    if prenda.id_usuario.id_usuario != usuario.id_usuario:
+    prenda = get_object_or_404(Prenda, id=id_prenda)
+    if prenda.user.id_usuario != usuario.id_usuario:
         messages.error(request, 'No tienes permiso para editar esta prenda.')
         return redirect('detalle_prenda', id_prenda=prenda.id_prenda)
 
@@ -235,7 +243,7 @@ def editar_prenda(request, id_prenda):
                 prenda.imagen_prenda = imagen
             prenda.save()
             messages.success(request, 'Prenda actualizada correctamente.')
-            return redirect('detalle_prenda', id_prenda=prenda.id_prenda)
+            return redirect('detalle_prenda', id_prenda=prenda.id)
 
     context = {
         'usuario': usuario,
@@ -244,14 +252,14 @@ def editar_prenda(request, id_prenda):
         'tallas': ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
         'estados': ['Nuevo', 'Excelente', 'Bueno', 'Usado'],
     }
-    return render(request, 'editar_prenda.html', context)
+    return render(request, 'prendas/editar_prenda.html', context)
 
 @cliente_only
 def eliminar_prenda(request, id_prenda):
     """Permite eliminar una prenda propia del usuario cliente."""
     usuario = get_usuario_actual(request)
-    prenda = get_object_or_404(Prenda, id_prenda=id_prenda)
-    if prenda.id_usuario.id_usuario != usuario.id_usuario:
+    prenda = get_object_or_404(Prenda, id=id_prenda)
+    if prenda.user.id_usuario != usuario.id_usuario:
         messages.error(request, 'No tienes permiso para eliminar esta prenda.')
         return redirect('detalle_prenda', id_prenda=prenda.id_prenda)
     if request.method == 'POST':
@@ -265,18 +273,18 @@ def eliminar_prenda(request, id_prenda):
         'usuario': usuario,
         'prenda': prenda,
     }
-    return render(request, 'eliminar_prenda.html', context)
+    return render(request, 'prendas/eliminar_prenda.html', context)
 
 @cliente_only
 def mis_prendas(request):
     """Lista todas las prendas del usuario cliente."""
     usuario = get_usuario_actual(request)
-    prendas = Prenda.objects.filter(id_usuario=usuario).order_by('-fecha_publicacion')
+    prendas = Prenda.objects.filter(user=usuario).order_by('-fecha_publicacion')
     context = {
         'usuario': usuario,
         'prendas': prendas,
     }
-    return render(request, 'mis_prendas.html', context)
+    return render(request, 'prendas/mis_prendas.html', context)
 
 @cliente_only
 def buscar_prendas(request):
@@ -308,4 +316,4 @@ def buscar_prendas(request):
         'tallas': ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
         'estados': ['Nuevo', 'Excelente', 'Bueno', 'Usado'],
     }
-    return render(request, 'buscar_prendas.html', context)
+    return render(request, 'prendas/buscar_prendas.html', context)

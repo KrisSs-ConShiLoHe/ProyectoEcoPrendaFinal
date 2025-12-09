@@ -14,9 +14,9 @@ from ..models import (
     Logro, UsuarioLogro, CampanaFundacion
 )
 from ..decorators import (
-    login_required_custom, 
+    login_required_custom,
     anonymous_required,
-    ajax_login_required, 
+    ajax_login_required,
     session_valid,
     admin_required,
     representante_fundacion_required,
@@ -24,6 +24,8 @@ from ..decorators import (
     cliente_only,
     role_required,
 )
+
+from .auth import get_usuario_actual
 
 from django.conf import settings
 
@@ -80,7 +82,7 @@ def crear_campana(request):
             messages.success(request, '¡Campaña creada exitosamente!')
             return redirect('panel_fundacion')
     context = {'usuario': usuario, 'fundacion': fundacion}
-    return render(request, 'crear_campana.html', context)
+    return render(request, 'campañas/crear_campana.html', context)
 
 @login_required_custom
 def campanas_solidarias(request):
@@ -91,7 +93,7 @@ def campanas_solidarias(request):
         'usuario': usuario,
         'campanas': campanas,
     }
-    return render(request, 'campanas_solidarias.html', context)
+    return render(request, 'campañas/campanas_solidarias.html', context)
 
 @login_required_custom
 def detalle_campana(request, id_campana):
@@ -109,7 +111,7 @@ def detalle_campana(request, id_campana):
         'avance': avance,
         'porcentaje_avance': porcentaje_avance,
     }
-    return render(request, 'detalle_campana.html', context)
+    return render(request, 'campañas/detalle_campana.html', context)
 
 @login_required_custom
 def donar_a_campana(request, id_campana):
@@ -142,7 +144,7 @@ def donar_a_campana(request, id_campana):
         'campana': campana,
         'prendas': prendas_usuario,
     }
-    return render(request, 'donar_a_campana.html', context)
+    return render(request, 'campañas/donar_a_campana.html', context)
 
 @representante_fundacion_required
 def mis_campanas(request):
@@ -155,4 +157,4 @@ def mis_campanas(request):
         'fundacion': fundacion,
         'campanas': campanas,
     }
-    return render(request, 'mis_campanas.html', context)
+    return render(request, 'campañas/mis_campanas.html', context)

@@ -170,6 +170,7 @@ class TipoTransaccion(models.Model):
 # ------------------- Prenda ----------------------
 
 class Prenda(models.Model):
+    id_prenda = models.AutoField(primary_key=True)
     user = models.ForeignKey(Usuario, on_delete=models.CASCADE)  # Cambié a CASCADE y renombré a 'user'.
     nombre = models.CharField(max_length=150)
     descripcion = models.CharField(max_length=300, blank=True, null=True)

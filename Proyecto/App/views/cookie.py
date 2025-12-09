@@ -53,7 +53,7 @@ logger = logging.getLogger(__name__)
 
 def configurar_cookies(request):
     """Página de configuración de cookies"""
-    return render(request, 'configurar_cookies.html')
+    return render(request, 'cookies/configurar_cookies.html')
 
 def aceptar_cookies(request):
     """Acepta todas las cookies, con preferencias personalizadas si se envían."""

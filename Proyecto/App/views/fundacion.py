@@ -27,25 +27,6 @@ from ..decorators import (
 
 from django.conf import settings
 
-from ..cloudinary_utils import (
-    subir_imagen_prenda,
-    subir_imagen_usuario,
-    subir_logo_fundacion,
-    subir_imagen_campana,
-    validar_imagen,
-    eliminar_imagen_cloudinary,
-    extraer_public_id_de_url
-)
-
-from ..carbon_utils import (
-    calcular_impacto_prenda,
-    calcular_impacto_transaccion,
-    obtener_impacto_total_usuario,
-    obtener_impacto_total_plataforma,
-    generar_informe_impacto,
-    formatear_equivalencia
-)
-
 from ..forms import RegistroForm, PerfilForm, PrendaForm
 from .auth import get_usuario_actual
 
@@ -87,7 +68,7 @@ def detalle_fundacion(request, id_fundacion):
         'donaciones': donaciones,
         'impacto_total': impacto_total,
     }
-    return render(request, 'detalle_fundacion.html', context)
+    return render(request, 'fundaciones/detalle_fundacion.html', context)
 
 @representante_fundacion_required
 def panel_fundacion(request):
@@ -128,7 +109,7 @@ def panel_fundacion(request):
         'impacto': impacto,
         'campanas': campanas,
     }
-    return render(request, 'panel_fundacion.html', context)
+    return render(request, 'fundaciones/panel_fundacion.html', context)
 
 @representante_fundacion_required
 def gestionar_donaciones(request):
@@ -186,8 +167,8 @@ def enviar_mensaje_agradecimiento(request, id_usuario_donante):
             messages.error(request, 'Escribe un mensaje de agradecimiento.')
         else:
             Mensaje.objects.create(
-                id_emisor=usuario,
-                id_receptor=donante,
+                emisor=usuario,
+                receptor=donante,
                 contenido=contenido,
                 fecha_envio=timezone.now()
             )
@@ -197,7 +178,7 @@ def enviar_mensaje_agradecimiento(request, id_usuario_donante):
         'usuario': usuario,
         'donante': donante,
     }
-    return render(request, 'enviar_mensaje_agradecimiento.html', context)
+    return render(request, 'mensajes/enviar_mensaje_agradecimiento.html', context)
 
 @representante_fundacion_required
 def estadisticas_donaciones(request):
@@ -213,7 +194,7 @@ def estadisticas_donaciones(request):
         'resumen': list(resumen),
         'total_prendas': prendas.count()
     }
-    return render(request, 'estadisticas_donaciones.html', context)
+    return render(request, 'fundaciones/estadisticas_donaciones.html', context)
 
 # ==============================================================================
 # VISTA DEL MAPA INTERACTIVO

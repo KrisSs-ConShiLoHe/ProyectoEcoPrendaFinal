@@ -58,7 +58,7 @@ logger = logging.getLogger(__name__)
 def proponer_intercambio(request, id_prenda):
     """Permite a un usuario proponer un intercambio por otra prenda."""
     usuario = get_usuario_actual(request)
-    prenda_destino = get_object_or_404(Prenda.objects.select_related('user'), pk=id_prenda)  # Cambiado: 'pk=id_prenda', agregado select_related
+    prenda_destino = get_object_or_404(Prenda.objects.select_related('user'), id=id_prenda)  # Cambiado: 'pk=id_prenda', agregado select_related
 
     if prenda_destino.user.id == usuario.id_usuario:  # Cambiado: 'prenda_destino.user.id == usuario.id'
         messages.error(request, 'No puedes intercambiar con tu propia prenda.')
@@ -102,7 +102,7 @@ def proponer_intercambio(request, id_prenda):
 @login_required_custom
 def marcar_intercambio_entregado(request, id_transaccion):
     usuario = get_usuario_actual(request)
-    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda', 'user_origen'), pk=id_transaccion)  # Cambiado: agregado select_related
+    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda', 'user_origen'), id=id_transaccion)  # Cambiado: agregado select_related
     
     permitido, error = puede_actualizar_transaccion(usuario, transaccion, 'origen')
     if not permitido:
@@ -121,7 +121,7 @@ def marcar_intercambio_entregado(request, id_transaccion):
 @login_required_custom
 def confirmar_recepcion_intercambio(request, id_transaccion):
     usuario = get_usuario_actual(request)
-    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda', 'user_destino'), pk=id_transaccion)  # Cambiado: agregado select_related
+    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda', 'user_destino'), id=id_transaccion)  # Cambiado: agregado select_related
     
     permitido, error = puede_actualizar_transaccion(usuario, transaccion, 'destino')
     if not permitido:
@@ -140,7 +140,7 @@ def confirmar_recepcion_intercambio(request, id_transaccion):
 @login_required_custom
 def cancelar_intercambio(request, id_transaccion):
     usuario = get_usuario_actual(request)
-    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda'), pk=id_transaccion)  # Cambiado: agregado select_related
+    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda'), id=id_transaccion)  # Cambiado: agregado select_related
     
     permitido, error = puede_actualizar_transaccion(usuario, transaccion, 'origen')
     if not permitido:
@@ -160,7 +160,7 @@ def cancelar_intercambio(request, id_transaccion):
 def comprar_prenda(request, id_prenda):
     """Proponer compra de una prenda."""
     usuario = get_usuario_actual(request)
-    prenda = get_object_or_404(Prenda.objects.select_related('user'), pk=id_prenda)  # Cambiado: agregado select_related
+    prenda = get_object_or_404(Prenda.objects.select_related('user'), id=id_prenda)  # Cambiado: agregado select_related
     
     if prenda.user.id == usuario.id_usuario:  # Cambiado: 'prenda.user.id == usuario.id'
         messages.error(request, "No puedes comprar tu propia prenda.")
@@ -194,7 +194,7 @@ def comprar_prenda(request, id_prenda):
 @login_required_custom
 def marcar_compra_entregado(request, id_transaccion):
     usuario = get_usuario_actual(request)
-    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda', 'user_origen'), pk=id_transaccion)  # Cambiado: agregado select_related
+    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda', 'user_origen'), id=id_transaccion)  # Cambiado: agregado select_related
     
     permitido, error = puede_actualizar_transaccion(usuario, transaccion, 'origen')
     if not permitido:
@@ -214,7 +214,7 @@ def marcar_compra_entregado(request, id_transaccion):
 def marcar_donacion_enviada(request, id_transaccion):
     """Permite al donante marcar su donación como enviada."""
     usuario = get_usuario_actual(request)
-    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda', 'user_origen'), pk=id_transaccion)  # Cambiado: agregado select_related
+    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda', 'user_origen'), id=id_transaccion)  # Cambiado: agregado select_related
 
     permitido, error = puede_actualizar_transaccion(usuario, transaccion, 'origen')
     if not permitido:
@@ -235,7 +235,7 @@ def marcar_donacion_enviada(request, id_transaccion):
 @login_required_custom
 def confirmar_recepcion_compra(request, id_transaccion):
     usuario = get_usuario_actual(request)
-    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda', 'user_destino'), pk=id_transaccion)  # Cambiado: agregado select_related
+    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda', 'user_destino'), id=id_transaccion)  # Cambiado: agregado select_related
     
     permitido, error = puede_actualizar_transaccion(usuario, transaccion, 'destino')
     if not permitido:
@@ -254,7 +254,7 @@ def confirmar_recepcion_compra(request, id_transaccion):
 @login_required_custom
 def cancelar_compra(request, id_transaccion):
     usuario = get_usuario_actual(request)
-    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda'), pk=id_transaccion)  # Cambiado: agregado select_related
+    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda'), id=id_transaccion)  # Cambiado: agregado select_related
     
     permitido, error = puede_actualizar_transaccion(usuario, transaccion, 'origen')
     if not permitido:
@@ -343,7 +343,7 @@ def mis_transacciones(request):
 def actualizar_estado_transaccion(request, id_transaccion):
     """Permite actualizar el estado de una transacción."""
     usuario = get_usuario_actual(request)
-    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda', 'user_destino', 'user_origen'), pk=id_transaccion)  # Cambiado: agregado select_related
+    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda', 'user_destino', 'user_origen'), id=id_transaccion)  # Cambiado: agregado select_related
     if transaccion.user_destino and transaccion.user_destino.id != usuario.id_usuario:  # Cambiado: 'user_destino'
         if transaccion.user_origen.id != usuario.id_usuario:  # Cambiado: 'user_origen'
             return JsonResponse({'error': 'No autorizado'}, status=403)
@@ -389,7 +389,7 @@ def actualizar_estado_transaccion(request, id_transaccion):
 def reportar_disputa(request, id_transaccion):
     """Permite al comprador/receptor reportar un problema con la prenda."""
     usuario = get_usuario_actual(request)
-    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda', 'user_destino'), pk=id_transaccion)  # Cambiado: agregado select_related
+    transaccion = get_object_or_404(Transaccion.objects.select_related('prenda', 'user_destino'), id=id_transaccion)  # Cambiado: agregado select_related
     
     if not transaccion.user_destino or transaccion.user_destino.id != usuario.id_usuario:  # Cambiado: 'user_destino'
         messages.error(request, 'Solo el receptor puede reportar problemas.')
