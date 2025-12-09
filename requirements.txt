@@ -8,7 +8,7 @@ requests==2.32.4
 boto3==1.42.0
 cryptography==46.0.3
 gunicorn==23.0.0
-
+# hola xd
 # ==================== CLOUDINARY ====================
 # Gestión de imágenes en la nube
 django-cloudinary-storage==0.3.0
