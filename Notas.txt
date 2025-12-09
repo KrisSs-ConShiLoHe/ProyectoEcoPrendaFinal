@@ -1,0 +1,15 @@
+Comandos
+_______________________________________________
+Paquetes:
+pip install django
+_______________________________________________
+Entorno virtual:
+python -m venv venv
+.\\venv\\Scripts\\activate
+_______________________________________________
+Proyecto:
+django-admin startproject ...
+_______________________________________________
+Aplicacion:
+python manage.py startapp ...
+_______________________________________________

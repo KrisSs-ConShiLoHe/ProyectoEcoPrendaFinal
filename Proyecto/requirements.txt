@@ -1,0 +1,28 @@
+django==5.2.5
+djangorestframework==3.16.1
+pillow==11.3.0
+psycopg2-binary==2.9.11
+python-dotenv==1.2.1
+dj-database-url==3.0.1
+requests==2.32.4
+boto3==1.42.0
+cryptography==46.0.3
+
+# ==================== CLOUDINARY ====================
+# Gestión de imágenes en la nube
+django-cloudinary-storage==0.3.0
+cloudinary==1.44.1
+
+# ==================== CLARIFAI ====================
+# Detección de prendas usando IA/ML
+clarifai-grpc==10.0.9
+
+# ==============================================================================
+# INSTALAR CON:
+# pip install -r requirements.txt
+#
+# CONFIGURACIÓN:
+# 1. Copiar .env.example a .env
+# 2. Llenar las credenciales de APIs en .env
+# 3. NUNCA commitear .env (está en .gitignore)
+# ==============================================================================

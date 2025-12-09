@@ -1,0 +1,63 @@
+# Archivos de ambiente (CRÍTICO - NO COMMITEAR)
+.env
+.env.local
+.env.*.local
+
+# Credenciales y secretos
+credentials.json
+secrets.json
+config_local.py
+
+# Django
+*.log
+*.pot
+db.sqlite3
+/media/
+/staticfiles/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node (si usas npm/yarn)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# OS
+Thumbs.db
+.DS_Store
