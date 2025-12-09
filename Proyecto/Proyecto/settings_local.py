@@ -18,7 +18,7 @@ DEBUG = True
 
 # Configuraciones básicas de Django
 SECRET_KEY = 'django-insecure-local-dev-key-change-in-production'
-ALLOWED_HOSTS = ['https://proyectoecoprenda-ykp.onrender.com']
+ALLOWED_HOSTS = ['proyectoecoprenda-ykp.onrender.com']
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [

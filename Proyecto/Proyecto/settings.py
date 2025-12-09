@@ -39,7 +39,7 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.environ.get(
     'ALLOWED_HOSTS',
-    'https://proyectoecoprenda-ykp.onrender.com'
+    'proyectoecoprenda-ykp.onrender.com'
 ).split(',')
 
 CSRF_TRUSTED_ORIGINS = [
