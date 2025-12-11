@@ -13,7 +13,7 @@ config_local.py
 *.pot
 db.sqlite3
 /media/
-/staticfiles/
+# /staticfiles/  → Incluir staticfiles en el repo para Render (archivos estáticos compilados)
 
 # Python
 __pycache__/
