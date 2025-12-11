@@ -197,9 +197,10 @@ def crear_prenda(request):
                         print(f"Error al analizar con Clarifai: {e}")
                         # Continuar sin análisis
             except CloudinaryError as e:
-                # Cloudinary no está configurado (desarrollo local) - usar almacenamiento local
+                # Cloudinary no está configurado (desarrollo local) - usar URL local simulada
                 try:
-                    prenda.imagen_prenda = imagen
+                    # Para desarrollo local, simular una URL de imagen
+                    prenda.imagen_prenda = f"/media/prendas/{imagen.name}"
                     prenda.save()
                     logger.info(f"Imagen guardada localmente para prenda {prenda.id_prenda} (Cloudinary no disponible)")
                 except Exception as local_error:
@@ -258,7 +259,16 @@ def editar_prenda(request, id_prenda):
             prenda.talla = talla
             # NO modificar prenda.estado (se controla por transacciones, no por edición)
             if imagen:
-                prenda.imagen_prenda = imagen
+                try:
+                    resultado = subir_imagen_prenda(imagen, prenda.id_prenda)
+                    if resultado and resultado.get('secure_url'):
+                        prenda.imagen_prenda = resultado['secure_url']
+                    else:
+                        # Fallback para desarrollo local
+                        prenda.imagen_prenda = f"/media/prendas/{imagen.name}"
+                except CloudinaryError:
+                    # Cloudinary no disponible, usar URL local
+                    prenda.imagen_prenda = f"/media/prendas/{imagen.name}"
             prenda.save()
             messages.success(request, 'Prenda actualizada correctamente.')
             return redirect('detalle_prenda', id_prenda=prenda.id_prenda)

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+ {% extends 'base.html' %}
 
 {% block title %}Mis Transacciones - EcoPrenda{% endblock %}
 
@@ -26,7 +26,7 @@
                     <div class="col-md-6 mb-3">
                         <div class="card">
                             {% if trans.prenda.imagen_prenda %}
-                            <img src="{{ trans.prenda.imagen_prenda.url }}" class="card-img-top" alt="Imagen de {{ trans.prenda.nombre }}" style="height: 200px; object-fit: cover;">
+                            <img src="{{ trans.prenda.imagen_prenda }}" class="card-img-top" alt="Imagen de {{ trans.prenda.nombre }}" style="height: 200px; object-fit: cover;">
                             {% else %}
                             <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted" style="height: 200px;">
                                 <span>Sin imagen</span>
@@ -82,10 +82,10 @@
                     <div class="col-md-6 mb-3">
                         <div class="card">
                             {% if trans.prenda.imagen_prenda %}
-                            <img src="{{ trans.prenda.imagen_prenda.url }}" class="card-img-top" alt="Imagen de {{ trans.prenda.nombre }}" style="height: 200px; object-fit: cover;">
+                            <img src="{{ trans.prenda.imagen_prenda }}" class="card-img-top" alt="Imagen de {{ trans.prenda.nombre }}" style="height: 200px; object-fit: cover;">
                             {% else %}
                             <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted" style="height: 200px;">
-                                <span>Sin imagen</span> 
+                                <span>Sin imagen</span>
                             </div>
                             {% endif %}
                             <div class="card-body">

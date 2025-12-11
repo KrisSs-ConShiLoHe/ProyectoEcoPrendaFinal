@@ -12,7 +12,7 @@
                             <!-- Imagen de la prenda -->
                                 <div class="mb-3">
                                     {% if prenda.imagen_prenda %}
-                                        <img src="{{ prenda.imagen_prenda.url }}" alt="Imagen de {{ prenda.nombre }}" class="img-fluid rounded border w-100" style="max-height: 350px; object-fit: cover;">
+                                        <img src="{{ prenda.imagen_prenda }}" alt="Imagen de {{ prenda.nombre }}" class="img-fluid rounded border w-100" style="max-height: 350px; object-fit: cover;">
                                     {% else %}
                                         <div class="d-flex align-items-center justify-content-center bg-white border rounded" style="height: 250px;">
                                             <span class="text-muted">Sin imagen</span>

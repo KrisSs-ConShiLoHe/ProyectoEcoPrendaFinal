@@ -24,7 +24,7 @@
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card h-100">
                     {% if prenda.imagen_prenda %}
-                    <img src="{{ prenda.imagen_prenda.url }}" class="card-img-top" alt="Imagen de {{ prenda.nombre }}" style="height: 200px; object-fit: cover;">
+                    <img src="{{ prenda.imagen_prenda }}" class="card-img-top" alt="Imagen de {{ prenda.nombre }}" style="height: 200px; object-fit: cover;">
                     {% else %}
                     <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted" style="height: 200px;">
                         <span>Sin imagen</span>
