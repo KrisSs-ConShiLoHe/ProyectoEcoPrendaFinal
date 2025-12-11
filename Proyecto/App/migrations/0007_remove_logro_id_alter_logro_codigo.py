@@ -10,6 +10,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RemoveField(
+            model_name='logro',
+            name='id',
+        ),
         migrations.AlterField(
             model_name='logro',
             name='codigo',

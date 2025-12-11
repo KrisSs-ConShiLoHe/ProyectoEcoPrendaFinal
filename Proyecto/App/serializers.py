@@ -61,7 +61,7 @@ class PrendaSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'user', 'usuario_nombre', 'usuario_apellido', 'fundacion_nombre',
             'nombre', 'descripcion', 'categoria', 'talla', 'estado',
-            'disponibilidad', 'fecha_publicacion', 'imagen_prenda', 'impactoambiental'
+            'fecha_publicacion', 'imagen_prenda', 'impactoambiental'
         ]
         read_only_fields = ['id', 'fecha_publicacion']
 

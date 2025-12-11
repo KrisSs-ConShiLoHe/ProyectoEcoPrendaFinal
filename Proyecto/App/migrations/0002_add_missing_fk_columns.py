@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='prenda',
             name='user',
-            field=models.ForeignKey(on_delete=models.CASCADE, to='App.usuario'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=models.CASCADE, to='App.usuario'),
         ),
         migrations.AddField(
             model_name='transaccion',
