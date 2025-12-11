@@ -140,4 +140,4 @@ def mis_logros(request):
         'usuario': usuario,
         'logros': logros,
     }
-    return render(request, 'mis_logros.html', context)
+    return render(request, 'logros/mis_logros.html', context)
