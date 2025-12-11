@@ -47,6 +47,8 @@ MIDDLEWARE = [
     'App.middleware.SessionSecurityMiddleware',
     'App.cookie_middleware.CookieConsentMiddleware',
     'App.cookie_middleware.CookiePreferencesMiddleware',
+    # staticfiles middleware para servir archivos estáticos en producción
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'Proyecto.urls'
@@ -65,6 +67,8 @@ TEMPLATES = [
         },
     },
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 WSGI_APPLICATION = 'Proyecto.wsgi.application'
 
