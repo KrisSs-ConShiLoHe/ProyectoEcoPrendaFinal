@@ -6,7 +6,7 @@ Usa SQLite en lugar de PostgreSQL remoto.
 
 import os
 from pathlib import Path
-
+# xsxsxsxsxs
 # Configuraciones básicas
 BASE_DIR = Path(__file__).resolve().parent.parent
 
