@@ -25,7 +25,7 @@
                                     {{ prenda.get_estado_display }}
                                 </span>
                             </div>
-                            {% if usuario and prenda.id_usuario.id_usuario == usuario.id_usuario %}
+                            {% if usuario and is_owner %}
                             <div>
                                 <a href="{% url 'editar_prenda' prenda.id_prenda %}" class="btn btn-sm btn-warning">
                                     <i class="bi bi-pencil"></i> Editar
@@ -78,7 +78,7 @@
             </div>
             <div class="col-md-4">
                 <!-- Opciones para el Interesado de la Prenda -->
-                {% if usuario and prenda.id_usuario.id_usuario != usuario.id_usuario and prenda.esta_disponible %}
+                {% if can_propose %}
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">¿Qué deseas hacer con esta prenda?</h5>
@@ -96,12 +96,12 @@
                 {% endif %}
 
                 <!-- Opciones para el Dueño de la Prenda -->
-                {% if usuario and prenda.id_usuario.id_usuario == usuario.id_usuario %}
+                {% if usuario and is_owner %}
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Mis Opciones</h5>
                         <div class="d-grid gap-2">
-                            {% if prenda.estado == 'DISPONIBLE' %}
+                            {% if can_donate %}
                             <a href="{% url 'donar_prenda' prenda.id_prenda %}" class="btn btn-danger btn-sm">
                                 <i class="bi bi-heart-fill"></i> Donar a Fundación
                             </a>

@@ -48,7 +48,7 @@ from ..carbon_utils import (
 )
 
 from ..clarifai_utils import analizar_imagen_completa
-from .auth import get_usuario_actual
+from .auth import get_usuario_actual, obtener_permisos_usuario, es_propietario_prenda, puede_proponer_transaccion, puede_donar_prenda, puede_editar_prenda, puede_eliminar_prenda
 
 # Configuración de logging
 logger = logging.getLogger(__name__)
@@ -73,12 +73,24 @@ def lista_prendas(request):
     if estado:
         prendas = prendas.filter(estado=estado)
 
+    # Enriquecer cada prenda con flags de permisos
+    permisos = obtener_permisos_usuario(usuario)
+    prendas_enriquecidas = []
+    for prenda in prendas:
+        prenda_data = {
+            'prenda': prenda,
+            'is_owner': es_propietario_prenda(usuario, prenda),
+            'can_propose': puede_proponer_transaccion(usuario, prenda),
+        }
+        prendas_enriquecidas.append(prenda_data)
+
     context = {
         'usuario': usuario,
-        'prendas': prendas,
+        'prendas': prendas_enriquecidas,
         'categorias': ['Camiseta', 'Pantalón', 'Vestido', 'Chaqueta', 'Zapatos', 'Accesorios'],
         'tallas': ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
         'estados': ['Nuevo', 'Excelente', 'Bueno', 'Usado'],
+        **permisos,
     }
     return render(request, 'prendas/lista_prendas.html', context)
 
@@ -98,11 +110,25 @@ def detalle_prenda(request, id_prenda):
         estado__in=['PENDIENTE', 'RESERVADA', 'EN_PROCESO']
     ).order_by('-fecha_transaccion').first()
 
+    # Obtener permisos y flags
+    permisos = obtener_permisos_usuario(usuario)
+    is_owner = es_propietario_prenda(usuario, prenda)
+    can_propose = puede_proponer_transaccion(usuario, prenda)
+    can_donate = puede_donar_prenda(usuario, prenda)
+    can_edit = puede_editar_prenda(usuario, prenda)
+    can_delete = puede_eliminar_prenda(usuario, prenda)
+
     context = {
         'usuario': usuario,
         'prenda': prenda,
         'impacto': impacto_obj,
         'transaccion_actual': transaccion_actual,
+        'is_owner': is_owner,
+        'can_propose': can_propose,
+        'can_donate': can_donate,
+        'can_edit': can_edit,
+        'can_delete': can_delete,
+        **permisos,  # Añadir todos los permisos al contexto
     }
     return render(request, 'prendas/detalle_prenda.html', context)
 
@@ -272,9 +298,23 @@ def mis_prendas(request):
     """Lista todas las prendas del usuario cliente."""
     usuario = get_usuario_actual(request)
     prendas = Prenda.objects.filter(user=usuario).order_by('-fecha_publicacion')
+    
+    # Enriquecer cada prenda con flags de permisos
+    permisos = obtener_permisos_usuario(usuario)
+    prendas_enriquecidas = []
+    for prenda in prendas:
+        prenda_data = {
+            'prenda': prenda,
+            'is_owner': es_propietario_prenda(usuario, prenda),
+            'can_edit': puede_editar_prenda(usuario, prenda),
+            'can_delete': puede_eliminar_prenda(usuario, prenda),
+        }
+        prendas_enriquecidas.append(prenda_data)
+    
     context = {
         'usuario': usuario,
-        'prendas': prendas,
+        'prendas': prendas_enriquecidas,
+        **permisos,
     }
     return render(request, 'prendas/mis_prendas.html', context)
 

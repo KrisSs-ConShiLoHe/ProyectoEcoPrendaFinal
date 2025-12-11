@@ -25,8 +25,8 @@
                     {% for trans in transacciones_enviadas %}
                     <div class="col-md-6 mb-3">
                         <div class="card">
-                            {% if trans.id_prenda.imagen_prenda %}
-                            <img src="{{ trans.id_prenda.imagen_prenda.url }}" class="card-img-top" alt="Imagen de {{ trans.id_prenda.nombre }}" style="height: 200px; object-fit: cover;">
+                            {% if trans.prenda.imagen_prenda %}
+                            <img src="{{ trans.prenda.imagen_prenda.url }}" class="card-img-top" alt="Imagen de {{ trans.prenda.nombre }}" style="height: 200px; object-fit: cover;">
                             {% else %}
                             <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted" style="height: 200px;">
                                 <span>Sin imagen</span>
@@ -34,23 +34,23 @@
                             {% endif %}
                             <div class="card-body">
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span class="badge bg-primary">{{ trans.id_tipo.nombre_tipo }}</span>
+                                    <span class="badge bg-primary">{{ trans.tipo.nombre_tipo }}</span>
                                     <span class="badge {% if trans.estado == 'COMPLETADA' %}bg-success{% elif trans.estado == 'PENDIENTE' %}bg-warning{% else %}bg-secondary{% endif %}">
                                         {{ trans.get_estado_display }}
                                     </span>
                                 </div>
 
-                                <h5 class="card-title">{{ trans.id_prenda.nombre }}</h5>
+                                <h5 class="card-title">{{ trans.prenda.nombre }}</h5>
                                 
-                                {% if trans.id_usuario_destino %}
+                                {% if trans.user_destino %}
                                 <p class="mb-1">
-                                    <strong>Para:</strong> {{ trans.id_usuario_destino.nombre }}
+                                    <strong>Para:</strong> {{ trans.user_destino.nombre }}
                                 </p>
                                 {% endif %}
 
-                                {% if trans.id_fundacion %}
+                                {% if trans.fundacion %}
                                 <p class="mb-1">
-                                    <strong>Fundación:</strong> {{ trans.id_fundacion.nombre }}
+                                    <strong>Fundación:</strong> {{ trans.fundacion.nombre }}
                                 </p>
                                 {% endif %}
 
@@ -58,7 +58,7 @@
                                     <i class="bi bi-calendar"></i> {{ trans.fecha_transaccion|date:"d/m/Y H:i" }}
                                 </p>
 
-                                <a href="{% url 'detalle_prenda' trans.id_prenda.id_prenda %}" 
+                                <a href="{% url 'detalle_prenda' trans.prenda.id_prenda %}" 
                                    class="btn btn-outline-primary btn-sm">
                                     Ver Prenda
                                 </a>
@@ -81,8 +81,8 @@
                     {% for trans in transacciones_recibidas %}
                     <div class="col-md-6 mb-3">
                         <div class="card">
-                            {% if trans.id_prenda.imagen_prenda %}
-                            <img src="{{ trans.id_prenda.imagen_prenda.url }}" class="card-img-top" alt="Imagen de {{ trans.id_prenda.nombre }}" style="height: 200px; object-fit: cover;">
+                            {% if trans.prenda.imagen_prenda %}
+                            <img src="{{ trans.prenda.imagen_prenda.url }}" class="card-img-top" alt="Imagen de {{ trans.prenda.nombre }}" style="height: 200px; object-fit: cover;">
                             {% else %}
                             <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted" style="height: 200px;">
                                 <span>Sin imagen</span> 
@@ -90,16 +90,16 @@
                             {% endif %}
                             <div class="card-body">
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span class="badge bg-success">{{ trans.id_tipo.nombre_tipo }}</span>
+                                    <span class="badge bg-success">{{ trans.tipo.nombre_tipo }}</span>
                                     <span class="badge {% if trans.estado == 'COMPLETADA' %}bg-success{% elif trans.estado == 'PENDIENTE' %}bg-warning{% else %}bg-secondary{% endif %}">
                                         {{ trans.get_estado_display }}
                                     </span>
                                 </div>
 
-                                <h5 class="card-title">{{ trans.id_prenda.nombre }}</h5>
+                                <h5 class="card-title">{{ trans.prenda.nombre }}</h5>
                                 
                                 <p class="mb-1">
-                                    <strong>De:</strong> {{ trans.id_usuario_origen.nombre }}
+                                    <strong>De:</strong> {{ trans.user_origen.nombre }}
                                 </p>
 
                                 <p class="text-muted small mb-3">
@@ -107,7 +107,7 @@
                                 </p>
 
                                 <div class="btn-group w-100">
-                                    <a href="{% url 'detalle_prenda' trans.id_prenda.id_prenda %}" 
+                                    <a href="{% url 'detalle_prenda' trans.prenda.id_prenda %}" 
                                        class="btn btn-outline-primary btn-sm">
                                         Ver Prenda
                                     </a>

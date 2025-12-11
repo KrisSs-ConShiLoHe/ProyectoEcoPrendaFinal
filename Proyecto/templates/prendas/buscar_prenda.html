@@ -57,7 +57,7 @@
                         <p class="card-text text-muted">{{ prenda.descripcion|truncatewords:15 }}</p>
                         <div class="mb-2">
                             <small><strong>Talla:</strong> {{ prenda.talla }}</small><br>
-                            <small class="text-muted"><i class="bi bi-person"></i> {{ prenda.id_usuario.nombre }}</small>
+                            <small class="text-muted"><i class="bi bi-person"></i> {{ prenda.user.nombre }}</small>
                         </div>
                         <a href="{% url 'detalle_prenda' prenda.id_prenda %}" class="btn btn-outline-primary w-100">Ver Detalle</a>
                     </div>

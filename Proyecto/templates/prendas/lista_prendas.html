@@ -61,7 +61,8 @@
         <!-- Lista de Prendas -->
         <div class="row">
             {% if prendas %}
-                {% for prenda in prendas %}
+                {% for item in prendas %}
+                {% with prenda=item.prenda is_owner=item.is_owner can_propose=item.can_propose %}
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
                         {% if prenda.imagen_prenda %}
@@ -83,7 +84,7 @@
                             
                             <div class="mb-2">
                                 <small class="text-muted">
-                                    <i class="bi bi-person"></i> {{ prenda.id_usuario.nombre }}
+                                    <i class="bi bi-person"></i> {{ prenda.user.nombre }}
                                 </small>
                             </div>
                             
@@ -100,6 +101,7 @@
                         </div>
                     </div>
                 </div>
+                {% endwith %}
                 {% endfor %}
             {% else %}
                 <div class="col-12">

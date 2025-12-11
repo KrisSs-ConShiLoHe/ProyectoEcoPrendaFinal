@@ -119,6 +119,104 @@ def puede_actualizar_transaccion(usuario, transaccion, permiso_requerido):
             return False, 'Solo el representante de la fundación puede realizar esta acción.'
     return True, None
 
+
+# ==============================================================================
+# FUNCIONES HELPER DE PERMISOS Y ROLES
+# ==============================================================================
+
+def obtener_permisos_usuario(usuario):
+    """Obtiene un diccionario con todos los permisos y roles del usuario.
+    
+    Retorna dict con:
+    - es_cliente: bool
+    - es_admin: bool
+    - es_moderador: bool
+    - es_representante: bool
+    - es_staff: bool
+    - fundacion_id: int o None
+    - puede_gestionar_donaciones: bool
+    - puede_ver_reportes: bool
+    - puede_moderar_disputas: bool
+    """
+    if not usuario:
+        return {
+            'es_cliente': False,
+            'es_admin': False,
+            'es_moderador': False,
+            'es_representante': False,
+            'es_staff': False,
+            'fundacion_id': None,
+            'puede_gestionar_donaciones': False,
+            'puede_ver_reportes': False,
+            'puede_moderar_disputas': False,
+        }
+    
+    es_admin = usuario.rol == 'ADMINISTRADOR'
+    es_moderador = usuario.rol == 'MODERADOR'
+    es_representante = usuario.rol == 'REPRESENTANTE_FUNDACION'
+    es_cliente = usuario.rol == 'CLIENTE'
+    
+    return {
+        'es_cliente': es_cliente,
+        'es_admin': es_admin,
+        'es_moderador': es_moderador,
+        'es_representante': es_representante,
+        'es_staff': usuario.es_staff,
+        'fundacion_id': usuario.fundacion_asignada.id_fundacion if es_representante and usuario.fundacion_asignada else None,
+        'puede_gestionar_donaciones': es_representante or es_admin,
+        'puede_ver_reportes': es_admin or es_moderador,
+        'puede_moderar_disputas': es_admin or es_moderador,
+    }
+
+
+def es_propietario_prenda(usuario, prenda):
+    """Verifica si el usuario es propietario de la prenda."""
+    if not usuario or not prenda:
+        return False
+    return usuario.id_usuario == getattr(prenda.user, 'id_usuario', None)
+
+
+def puede_proponer_transaccion(usuario, prenda):
+    """Verifica si el usuario puede proponer compra/intercambio de una prenda.
+    
+    Reglas:
+    - No puede ser el propietario
+    - La prenda debe estar disponible
+    """
+    if not usuario or not prenda:
+        return False
+    if es_propietario_prenda(usuario, prenda):
+        return False
+    return prenda.esta_disponible()
+
+
+def puede_donar_prenda(usuario, prenda):
+    """Verifica si el usuario puede donar una prenda.
+    
+    Reglas:
+    - Debe ser el propietario
+    - La prenda debe estar disponible
+    """
+    if not usuario or not prenda:
+        return False
+    if not es_propietario_prenda(usuario, prenda):
+        return False
+    return prenda.estado == 'DISPONIBLE'
+
+
+def puede_editar_prenda(usuario, prenda):
+    """Verifica si el usuario puede editar una prenda."""
+    if not usuario or not prenda:
+        return False
+    return es_propietario_prenda(usuario, prenda)
+
+
+def puede_eliminar_prenda(usuario, prenda):
+    """Verifica si el usuario puede eliminar una prenda."""
+    if not usuario or not prenda:
+        return False
+    return es_propietario_prenda(usuario, prenda)
+
 # ------------------------------------------------------------------------------------------------------------------
 # Vistas Principales
 
