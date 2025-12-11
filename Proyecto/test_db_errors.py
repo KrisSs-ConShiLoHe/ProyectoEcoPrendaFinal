@@ -27,6 +27,16 @@ def test_database_queries():
         columns = [row[0] for row in cursor.fetchall()]
         print(f"Transaccion table columns: {columns}")
 
+        # Check tipo_transaccion table
+        cursor.execute("SELECT column_name FROM information_schema.columns WHERE table_name = 'tipo_transaccion' ORDER BY column_name;")
+        tipo_columns = [row[0] for row in cursor.fetchall()]
+        print(f"TipoTransaccion table columns: {tipo_columns}")
+
+        # Check impacto_ambiental table
+        cursor.execute("SELECT column_name FROM information_schema.columns WHERE table_name = 'impacto_ambiental' ORDER BY column_name;")
+        impacto_columns = [row[0] for row in cursor.fetchall()]
+        print(f"ImpactoAmbiental table columns: {impacto_columns}")
+
     try:
         # Test Prenda query with user
         prendas = Prenda.objects.select_related('user').all()[:5]
