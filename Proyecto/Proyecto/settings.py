@@ -72,6 +72,8 @@ MIDDLEWARE = [
     # Middlewares personalizados para cookies
     'App.cookie_middleware.CookieConsentMiddleware',
     'App.cookie_middleware.CookiePreferencesMiddleware',
+    # staticfiles middleware para servir archivos estáticos en producción
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'Proyecto.urls'
@@ -90,6 +92,8 @@ TEMPLATES = [
         },
     },
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 WSGI_APPLICATION = 'Proyecto.wsgi.application'
 
@@ -151,8 +155,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static') # Para desarrollo
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')] # Para producción (collectstatic)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
