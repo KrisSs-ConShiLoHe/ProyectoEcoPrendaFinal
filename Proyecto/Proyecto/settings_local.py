@@ -20,7 +20,7 @@ DEBUG = True
 SECRET_KEY = 'django-insecure-local-dev-key-change-in-production'
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = ['proyectoecoprendafinal-1.onrender.com']
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [
