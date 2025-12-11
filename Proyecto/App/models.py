@@ -507,4 +507,6 @@ class CampanaFundacion(models.Model):
         if self.fecha_fin and self.fecha_inicio >= self.fecha_fin:
             raise ValueError("La fecha de fin debe ser posterior a la fecha de inicio.")
         super().save(*args, **kwargs)
+
+        # xdxdxdxdxd
  
