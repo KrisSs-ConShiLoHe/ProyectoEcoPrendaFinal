@@ -23,14 +23,14 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <strong>Prenda:</strong> {{ transaccion.id_prenda.nombre }}<br>
-                                        <strong>Tipo:</strong> {{ transaccion.id_tipo.nombre_tipo }}<br>
+                                        <strong>Prenda:</strong> {{ transaccion.prenda.nombre }}<br>
+                                        <strong>Tipo:</strong> {{ transaccion.tipo.nombre_tipo }}<br>
                                         <strong>Estado:</strong> {{ transaccion.get_estado_display }}
                                     </div>
                                     <div class="col-md-6">
-                                        <strong>De:</strong> {{ transaccion.id_usuario_origen.nombre }}<br>
-                                        <strong>Para:</strong> {{ transaccion.id_usuario_destino.nombre }}<br>
-                                        <strong>Código:</strong> #{{ transaccion.id_transaccion }}
+                                        <strong>De:</strong> {{ transaccion.user_origen.nombre }}<br>
+                                        <strong>Para:</strong> {{ transaccion.user_destino.nombre }}<br>
+                                        <strong>Código:</strong> #{{ transaccion.id }}
                                     </div>
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
                                 <ol class="mb-0">
                                     <li>Tu reporte se marca como <strong>En Disputa</strong> en tu historial de transacciones.</li>
                                     <li>El equipo de administración recibe notificación inmediata.</li>
-                                    <li>Se revisa el chat completo entre tú y {{ transaccion.id_usuario_origen.nombre }}.</li>
+                                    <li>Se revisa el chat completo entre tú y {{ transaccion.user_origen.nombre }}.</li>
                                     <li>Se solicitan pruebas (fotos, comprobantes de pago/envío) a ambas partes.</li>
                                     <li>El administrador resuelve la disputa marcándola como <strong>Completada</strong> o <strong>Cancelada</strong>.</li>
                                     <li>Recibirás una notificación con la resolución.</li>

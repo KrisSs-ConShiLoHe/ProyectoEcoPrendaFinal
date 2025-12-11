@@ -91,10 +91,10 @@
                         <td>{{ t.fecha_transaccion|date:"d/m/Y" }}</td>
                         <td>{{ t.id_tipo.nombre_tipo }}</td>
                         <td>{{ t.id_prenda.nombre }}</td>
-                        <td>{{ t.id_usuario_origen.nombre }}</td>
+                        <td>{{ t.user_origen.nombre }}</td>
                         <td>
-                            {% if t.id_usuario_destino %}
-                                {{ t.id_usuario_destino.nombre }}
+                            {% if t.user_destino %}
+                                {{ t.user_destino.nombre }}
                             {% elif t.id_fundacion %}
                                 {{ t.id_fundacion.nombre }}
                             {% else %}

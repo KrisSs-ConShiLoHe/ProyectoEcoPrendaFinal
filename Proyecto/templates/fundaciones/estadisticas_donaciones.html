@@ -48,9 +48,9 @@
                             <tbody>
                                 {% for donacion in donaciones %}
                                     <tr>
-                                        <td>{{ donacion.id_transaccion }}</td>
-                                        <td>{{ donacion.id_prenda.nombre }}</td>
-                                        <td>{{ donacion.id_usuario_origen.nombre }}</td>
+                                        <td>{{ donacion.id }}</td>
+                                        <td>{{ donacion.prenda.nombre }}</td>
+                                        <td>{{ donacion.user_origen.nombre }}</td>
                                         <td>
                                             <span class="badge 
                                                 {% if donacion.estado == 'COMPLETADA' %} bg-success

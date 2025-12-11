@@ -27,16 +27,16 @@
                     <tbody>
                         {% for donacion in donaciones %}
                             <tr>
-                                <td>{{ donacion.id_transaccion }}</td>
-                                <td>{{ donacion.id_prenda.nombre }}</td>
-                                <td>{{ donacion.id_usuario_origen.nombre }}</td>
+                                <td>{{ donacion.id }}</td>
+                                <td>{{ donacion.prenda.nombre }}</td>
+                                <td>{{ donacion.user_origen.nombre }}</td>
                                 <td>{{ donacion.fecha_transaccion|date:"d/m/Y" }}</td>
                                 <td>
-                                    <a href="{% url 'confirmar_recepcion_donacion' donacion.id_transaccion %}"
+                                    <a href="{% url 'confirmar_recepcion_donacion' donacion.id %}"
                                        class="btn btn-success btn-sm mb-1">
                                         <i class="bi bi-check-circle"></i> Confirmar
                                     </a>
-                                    <a href="{% url 'enviar_mensaje_agradecimiento' donacion.id_usuario_origen.id_usuario %}"
+                                    <a href="{% url 'enviar_mensaje_agradecimiento' donacion.user_origen.id_usuario %}"
                                        class="btn btn-primary btn-sm mb-1">
                                         <i class="bi bi-envelope-heart"></i> Agradecer
                                     </a>

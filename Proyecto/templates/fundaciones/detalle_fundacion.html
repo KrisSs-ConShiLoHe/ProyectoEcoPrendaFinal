@@ -96,11 +96,11 @@
                                     {% for donacion in donaciones %}
                                     <tr>
                                         <td>
-                                            <a href="{% url 'detalle_prenda' donacion.id_prenda.id_prenda %}">
-                                                {{ donacion.id_prenda.nombre }}
+                                            <a href="{% url 'detalle_prenda' donacion.prenda.id_prenda %}">
+                                                {{ donacion.prenda.nombre }}
                                             </a>
                                         </td>
-                                        <td>{{ donacion.id_usuario_origen.nombre }}</td>
+                                        <td>{{ donacion.user_origen.nombre }}</td>
                                         <td>{{ donacion.fecha_transaccion|date:"d/m/Y H:i" }}</td>
                                         <td>
                                             <span class="badge bg-success">{{ donacion.estado }}</span>

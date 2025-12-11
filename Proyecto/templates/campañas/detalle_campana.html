@@ -57,8 +57,8 @@
                         <ul class="list-group">
                             {% for don in donaciones %}
                                 <li class="list-group-item">
-                                    <strong>{{ don.id_prenda.nombre }}</strong>
-                                    <span class="text-muted">por {{ don.id_usuario_origen.nombre }}</span>
+                                    <strong>{{ don.prenda.nombre }}</strong>
+                                    <span class="text-muted">por {{ don.user_origen.nombre }}</span>
                                     <span class="float-end"><i class="bi bi-calendar-check"></i> {{ don.fecha_transaccion|date:"d/m/Y" }}</span>
                                 </li>
                             {% endfor %}
