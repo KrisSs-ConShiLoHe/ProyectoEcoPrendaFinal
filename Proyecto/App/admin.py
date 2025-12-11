@@ -59,7 +59,7 @@ class TipoTransaccionAdmin(admin.ModelAdmin):
 
 @admin.register(Transaccion)
 class TransaccionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'tipo', 'prenda', 'user_origen', 'user_destino', 'fundacion', 'campana', 'estado', 'fecha_transaccion')  # Cambié 'id_transaccion' a 'id', 'id_tipo' a 'tipo', 'id_prenda' a 'prenda', etc.
+    list_display = ('id_transaccion', 'tipo', 'prenda', 'user_origen', 'user_destino', 'fundacion', 'campana', 'estado', 'fecha_transaccion')  # Cambié 'id_transaccion' a 'id', 'id_tipo' a 'tipo', 'id_prenda' a 'prenda', etc.
     search_fields = ('prenda__nombre',)  # Ajusté a 'prenda__nombre'.
     list_filter = ('tipo', 'estado', 'fecha_transaccion', 'fundacion', 'campana')
     ordering = ('-fecha_transaccion',)

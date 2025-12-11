@@ -222,12 +222,13 @@ class Prenda(models.Model):
 # ------------------- Transaccion ----------------------
 
 class Transaccion(models.Model):
-    prenda = models.ForeignKey(Prenda, on_delete=models.CASCADE)  # Cambié a CASCADE y renombré.
-    tipo = models.ForeignKey(TipoTransaccion, on_delete=models.CASCADE)  # Cambié a CASCADE y renombré.
-    user_origen = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='transacciones_origen')  # Cambié a CASCADE y renombré.
-    user_destino = models.ForeignKey(Usuario, on_delete=models.CASCADE, blank=True, null=True, related_name='transacciones_destino')  # Cambié a CASCADE.
-    fundacion = models.ForeignKey(Fundacion, on_delete=models.SET_NULL, blank=True, null=True)  # Cambié a SET_NULL.
-    campana = models.ForeignKey('CampanaFundacion', on_delete=models.SET_NULL, blank=True, null=True)  # Cambié a SET_NULL.
+    id_transaccion = models.AutoField(primary_key=True, db_column='id_transaccion')
+    prenda = models.ForeignKey(Prenda, on_delete=models.CASCADE, db_column='id_prenda_id')  # Cambié a CASCADE y renombré.
+    tipo = models.ForeignKey(TipoTransaccion, on_delete=models.CASCADE, db_column='id_tipo_id')  # Cambié a CASCADE y renombré.
+    user_origen = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='transacciones_origen', db_column='id_usuario_origen_id')  # Cambié a CASCADE y renombré.
+    user_destino = models.ForeignKey(Usuario, on_delete=models.CASCADE, blank=True, null=True, related_name='transacciones_destino', db_column='id_usuario_destino_id')  # Cambié a CASCADE.
+    fundacion = models.ForeignKey(Fundacion, on_delete=models.SET_NULL, blank=True, null=True, db_column='id_fundacion_id')  # Cambié a SET_NULL.
+    campana = models.ForeignKey('CampanaFundacion', on_delete=models.SET_NULL, blank=True, null=True, db_column='id_campana_id')  # Cambié a SET_NULL.
     fecha_transaccion = models.DateTimeField(default=timezone.now, blank=True, null=True)
     
     ESTADO_CHOICES = [
@@ -416,7 +417,7 @@ class Mensaje(models.Model):
 # ------------------- Impacto Ambiental ----------------------
 
 class ImpactoAmbiental(models.Model):
-    prenda = models.ForeignKey(Prenda, on_delete=models.CASCADE)  # Cambié a CASCADE.
+    prenda = models.ForeignKey(Prenda, on_delete=models.CASCADE, db_column='id_prenda_id')  # Cambié a CASCADE.
     carbono_evitar_kg = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     energia_ahorrada_kwh = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     fecha_calculo = models.DateTimeField(default=timezone.now, blank=True, null=True)

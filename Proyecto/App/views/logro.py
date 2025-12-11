@@ -14,9 +14,9 @@ from ..models import (
     Logro, UsuarioLogro, CampanaFundacion
 )
 from ..decorators import (
-    login_required_custom, 
+    login_required_custom,
     anonymous_required,
-    ajax_login_required, 
+    ajax_login_required,
     session_valid,
     admin_required,
     representante_fundacion_required,
@@ -24,6 +24,8 @@ from ..decorators import (
     cliente_only,
     role_required,
 )
+
+from .auth import get_usuario_actual
 
 from django.conf import settings
 
@@ -112,8 +114,8 @@ def verificar_logros(usuario):
             carbono_total = impacto['total_carbono'] or 0
             if carbono_total >= 1000:
                 UsuarioLogro.objects.create(
-                    id_usuario=usuario,
-                    id_logro=logro,
+                    user=usuario,
+                    logro=logro,
                     fecha_desbloqueo=timezone.now()
                 )
                 nuevos.append(logro)
