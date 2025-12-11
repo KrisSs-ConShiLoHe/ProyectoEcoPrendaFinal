@@ -1,71 +1,32 @@
-# services:
-#   - type: web
-#     name: ecoprenda-app
-#     runtime: python
-#     buildCommand: pip install -r Proyecto/requirements.txt && cd Proyecto && python manage.py migrate --settings=Proyecto.settings && python manage.py collectstatic --noinput --settings=Proyecto.settings
-#     startCommand: cd Proyecto && gunicorn Proyecto.wsgi:application --bind 0.0.0.0:$PORT --workers 3 --timeout 120
-#     envVars:
-#       - key: PYTHON_VERSION
-#         value: "3.11"
-#       - key: DEBUG
-#         value: "False"
-#       - key: SECRET_KEY
-#         generateValue: true
-#       - key: ALLOWED_HOSTS
-#         value: proyectoecoprenda-ykp.onrender.com,www.proyectoecoprenda-ykp.onrender.com
-
-#       # Las siguientes DEBEN configurarse en el dashboard de Render
-#       # Base de datos PostgreSQL (Render la proporciona automáticamente)
-#       # - DATABASE_URL: Render la crea automáticamente si configuras PostgreSQL
-
-#       # APIs Externas (OBLIGATORIAS para funcionamiento completo)
-#       # - GEOAPIFY_API_KEY: https://geoapify.com
-#       # - CLOUDINARY_CLOUD_NAME: https://cloudinary.com
-#       # - CLOUDINARY_API_KEY: https://cloudinary.com
-#       # - CLOUDINARY_API_SECRET: https://cloudinary.com
-#       # - CLARIFAI_PAT: https://clarifai.com
-#       # - CLARIFAI_USER_ID: https://clarifai.com
-#       # - CLARIFAI_APP_ID: https://clarifai.com
-#       # - CLARIFAI_MODEL_ID: https://clarifai.com
-#       # - CLARIFAI_MODEL_VERSION_ID: https://clarifai.com
-      
-#     healthCheckPath: /
-
-services: 
+services:
   - type: web
     name: ecoprenda-app
     runtime: python
-
-    buildCommand: |
-      pip install -r Proyecto/requirements.txt
-      cd Proyecto
-      python manage.py collectstatic --noinput --settings=Proyecto.settings
-
-    startCommand: |
-      cd Proyecto
-      python manage.py migrate --settings=Proyecto.settings
-      gunicorn Proyecto.wsgi:application --bind 0.0.0.0:$PORT --workers 3 --timeout 120
-
+    buildCommand: pip install -r Proyecto/requirements.txt && cd Proyecto && python manage.py migrate --settings=Proyecto.settings && python manage.py loaddata data.json --settings=Proyecto.settings && python manage.py collectstatic --noinput --settings=Proyecto.settings
+    startCommand: cd Proyecto && gunicorn Proyecto.wsgi:application --bind 0.0.0.0:$PORT --workers 3 --timeout 120
     envVars:
       - key: PYTHON_VERSION
         value: "3.11"
-
       - key: DEBUG
         value: "False"
-
       - key: SECRET_KEY
-        value: "pon-aqui-una-secret-key-real-no-generada"
-
+        generateValue: true
       - key: ALLOWED_HOSTS
-        value: "proyectoecoprenda-ykp.onrender.com"
+        value: proyectoecoprenda-ykp.onrender.com,www.proyectoecoprenda-ykp.onrender.com
 
-      # Las siguientes DEBEN configurarse en el Dashboard (no en YAML)
-      # - DATABASE_URL
-      # - GEOAPIFY_API_KEY
-      # - CLOUDINARY_CLOUD_NAME
-      # - CLOUDINARY_API_KEY
-      # - CLOUDINARY_API_SECRET
-      # - CLARIFAI_PAT
-      # - ...
+      # Las siguientes DEBEN configurarse en el dashboard de Render
+      # Base de datos PostgreSQL (Render la proporciona automáticamente)
+      # - DATABASE_URL: Render la crea automáticamente si configuras PostgreSQL
 
+      # APIs Externas (OBLIGATORIAS para funcionamiento completo)
+      # - GEOAPIFY_API_KEY: https://geoapify.com
+      # - CLOUDINARY_CLOUD_NAME: https://cloudinary.com
+      # - CLOUDINARY_API_KEY: https://cloudinary.com
+      # - CLOUDINARY_API_SECRET: https://cloudinary.com
+      # - CLARIFAI_PAT: https://clarifai.com
+      # - CLARIFAI_USER_ID: https://clarifai.com
+      # - CLARIFAI_APP_ID: https://clarifai.com
+      # - CLARIFAI_MODEL_ID: https://clarifai.com
+      # - CLARIFAI_MODEL_VERSION_ID: https://clarifai.com
+      
     healthCheckPath: /

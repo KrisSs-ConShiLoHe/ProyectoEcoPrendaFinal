@@ -11,8 +11,6 @@ config_local.py
 # Django
 *.log
 *.pot
-db.sqlite3
-/media/
 # /staticfiles/  → Incluir staticfiles en el repo para Render (archivos estáticos compilados)
 
 # Python
