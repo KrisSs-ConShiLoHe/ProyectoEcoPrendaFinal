@@ -194,7 +194,7 @@ class Prenda(models.Model):
     
     cantidad = models.PositiveIntegerField(default=1, help_text="Cantidad disponible en stock")
     
-    imagen_prenda = models.ImageField(upload_to='prendas/', blank=True, null=True, max_length=200)
+    imagen_prenda = models.CharField(max_length=500, blank=True, null=True, help_text='URL de la imagen en Cloudinary')
 
     class Meta:
         db_table = 'prenda'
