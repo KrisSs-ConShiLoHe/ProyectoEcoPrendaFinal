@@ -90,7 +90,7 @@ class ImpactoAmbientalAdmin(admin.ModelAdmin):
 
 @admin.register(Logro)
 class LogroAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nombre', 'tipo', 'icono', 'codigo', 'requisito_valor')  # Cambié 'id_logro' a 'id'.
+    list_display = ('codigo', 'nombre', 'tipo', 'icono', 'requisito_valor')  # Cambié 'id_logro' a 'codigo'.
     search_fields = ('nombre', 'descripcion', 'codigo')
     list_filter = ('tipo',)
 

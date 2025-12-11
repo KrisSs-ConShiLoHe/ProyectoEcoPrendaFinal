@@ -442,8 +442,8 @@ class Logro(models.Model):
     tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
     icono = models.CharField(max_length=50, help_text='Clase de ícono Bootstrap')
     requisito_valor = models.IntegerField(help_text='Valor necesario para desbloquear')
-    codigo = models.CharField(max_length=50, unique=True, default="")
-    
+    codigo = models.CharField(max_length=50, primary_key=True, default="")
+
     class Meta:
         db_table = 'logro'
         indexes = [

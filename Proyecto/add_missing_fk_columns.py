@@ -96,6 +96,26 @@ def add_missing_fk_columns():
         except Exception as e:
             print(f"Error adding 'fundacion_id' column to campana_fundacion: {e}")
 
+        # Add emisor_id to mensaje table
+        try:
+            cursor.execute("""
+                ALTER TABLE mensaje
+                ADD COLUMN IF NOT EXISTS emisor_id INTEGER NULL REFERENCES usuario(id_usuario);
+            """)
+            print("Added 'emisor_id' column to mensaje table.")
+        except Exception as e:
+            print(f"Error adding 'emisor_id' column to mensaje: {e}")
+
+        # Add receptor_id to mensaje table
+        try:
+            cursor.execute("""
+                ALTER TABLE mensaje
+                ADD COLUMN IF NOT EXISTS receptor_id INTEGER NULL REFERENCES usuario(id_usuario);
+            """)
+            print("Added 'receptor_id' column to mensaje table.")
+        except Exception as e:
+            print(f"Error adding 'receptor_id' column to mensaje: {e}")
+
     print("All missing foreign key columns have been added.")
 
 if __name__ == '__main__':
