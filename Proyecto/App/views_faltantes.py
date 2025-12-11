@@ -6,6 +6,7 @@ Vistas faltantes para EcoPrenda:
 - api_calcular_impacto: API para calcular impacto
 - api_sugerir_categoria: API para sugerir categoría con Clarifai
 """
+# views que se me olvidaron agregar antes XD
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
