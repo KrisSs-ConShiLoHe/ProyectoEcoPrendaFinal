@@ -63,7 +63,7 @@ def lista_mensajes(request):
     # Usuarios con los que hay intercambio de mensajes
     enviados = Mensaje.objects.filter(emisor=usuario).values_list('receptor', flat=True)  # Cambiado: 'emisor', 'receptor'
     recibidos = Mensaje.objects.filter(receptor=usuario).values_list('emisor', flat=True)  # Cambiado: 'receptor', 'emisor'
-    ids_conversaciones = set(list(enviados) + list(recibidos))
+    ids_conversaciones = set([id for id in list(enviados) + list(recibidos) if id is not None])
     conversaciones = Usuario.objects.filter(id_usuario__in=ids_conversaciones)
     context = {
         'usuario': usuario,
