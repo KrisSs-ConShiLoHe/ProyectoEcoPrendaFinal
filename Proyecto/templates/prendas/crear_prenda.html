@@ -96,6 +96,66 @@
                             if (document.readyState !== 'loading') { fn(); }
                             else { document.addEventListener('DOMContentLoaded', fn); }
                           }
+
+                          function analizarImagenClarifai(imagenFile) {
+                            const formData = new FormData();
+                            formData.append('imagen_prenda', imagenFile);
+
+                            // Mostrar loading
+                            document.getElementById('clarifai-analysis').classList.remove('d-none');
+                            document.getElementById('analysis-loading').classList.remove('d-none');
+                            document.getElementById('analysis-success').classList.add('d-none');
+                            document.getElementById('analysis-error').classList.add('d-none');
+
+                            fetch('/api/analizar-imagen-clarifai/', {
+                              method: 'POST',
+                              body: formData,
+                              headers: {
+                                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                              }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                              // Ocultar loading
+                              document.getElementById('analysis-loading').classList.add('d-none');
+
+                              if (data.error) {
+                                // Mostrar error
+                                document.getElementById('analysis-error').classList.remove('d-none');
+                                document.getElementById('error-message').textContent = data.error;
+                              } else {
+                                // Mostrar éxito
+                                document.getElementById('analysis-success').classList.remove('d-none');
+                                document.getElementById('categoria-sugerida').textContent = data.categoria_sugerida || 'No detectada';
+                                document.getElementById('confianza').textContent = data.confianza ? `(${Math.round(data.confianza * 100)}% confianza)` : '';
+                                document.getElementById('total-prendas').textContent = data.total_prendas_detectadas || 0;
+                                document.getElementById('descripcion-auto').textContent = data.descripcion_auto || 'Sin descripción disponible';
+
+                                // Configurar botón de aplicar sugerencias
+                                const btnAplicar = document.getElementById('aplicar-sugerencias');
+                                btnAplicar.onclick = function() {
+                                  if (data.categoria_sugerida) {
+                                    const selectCategoria = document.getElementById('categoria');
+                                    selectCategoria.value = data.categoria_sugerida;
+                                  }
+                                  if (data.descripcion_auto) {
+                                    const textareaDesc = document.getElementById('descripcion');
+                                    if (!textareaDesc.value.trim()) {
+                                      textareaDesc.value = data.descripcion_auto;
+                                    }
+                                  }
+                                  alert('¡Sugerencias aplicadas!');
+                                };
+                              }
+                            })
+                            .catch(error => {
+                              console.error('Error:', error);
+                              document.getElementById('analysis-loading').classList.add('d-none');
+                              document.getElementById('analysis-error').classList.remove('d-none');
+                              document.getElementById('error-message').textContent = 'Error de conexión con el servidor';
+                            });
+                          }
+
                           ready(function () {
                             var input = document.getElementById('imagen_prenda');
                             var img = document.getElementById('preview-imagen');
@@ -111,6 +171,8 @@
                                 if (placeholder) placeholder.classList.remove('d-none');
                                 img.src = '';
                                 img.classList.add('d-none');
+                                // Ocultar análisis si no hay imagen
+                                document.getElementById('clarifai-analysis').classList.add('d-none');
                                 return;
                               }
 
@@ -120,6 +182,7 @@
                                 if (placeholder) placeholder.classList.remove('d-none');
                                 img.src = '';
                                 img.classList.add('d-none');
+                                document.getElementById('clarifai-analysis').classList.add('d-none');
                                 return;
                               }
 
@@ -129,6 +192,9 @@
                                 img.alt = 'Previsualización';
                                 img.classList.remove('d-none');
                                 if (placeholder) placeholder.classList.add('d-none');
+
+                                // ✨ ANALIZAR CON CLARIFAI ✨
+                                analizarImagenClarifai(file);
                               };
                               reader.readAsDataURL(file);
                             });
