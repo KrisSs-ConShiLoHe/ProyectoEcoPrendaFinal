@@ -64,7 +64,7 @@ def lista_mensajes(request):
     enviados = Mensaje.objects.filter(emisor=usuario).values_list('receptor', flat=True)  # Cambiado: 'emisor', 'receptor'
     recibidos = Mensaje.objects.filter(receptor=usuario).values_list('emisor', flat=True)  # Cambiado: 'receptor', 'emisor'
     ids_conversaciones = set(list(enviados) + list(recibidos))
-    conversaciones = Usuario.objects.filter(id_usuario__in=ids_conversaciones).select_related()  # Cambiado: 'id_usuario__in', agregado select_related
+    conversaciones = Usuario.objects.filter(id_usuario__in=ids_conversaciones)
     context = {
         'usuario': usuario,
         'conversaciones': conversaciones,
