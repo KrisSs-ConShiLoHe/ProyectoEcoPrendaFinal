@@ -7,7 +7,7 @@ from django import forms  # Agregado para forms
 import hashlib
 import json
 import logging  # Agregado para logging
-
+#xdxdxd
 from ..models import (
     Usuario, Prenda, Transaccion, TipoTransaccion, 
     Fundacion, Mensaje, ImpactoAmbiental, 
