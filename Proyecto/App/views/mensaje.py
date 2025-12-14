@@ -69,7 +69,7 @@ def lista_mensajes(request):
         'usuario': usuario,
         'conversaciones': conversaciones,
     }
-    return render(request, 'lista_mensajes.html', context)
+    return render(request, 'mensajes/lista_mensajes.html', context)
 
 @login_required_custom
 def conversacion(request, id_usuario):
@@ -86,7 +86,7 @@ def conversacion(request, id_usuario):
         'otro_usuario': otro_usuario,
         'mensajes': mensajes_conversacion,
     }
-    return render(request, 'conversacion.html', context)
+    return render(request, 'mensajes/conversacion.html', context)
 
 @login_required_custom
 def enviar_mensaje(request):
