@@ -18,9 +18,8 @@ DEBUG = True
 
 # Configuraciones básicas de Django
 SECRET_KEY = 'django-insecure-local-dev-key-change-in-production'
-DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ['proyectoecoprendafinal-1.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'proyectoecoprendafinal-1.onrender.com']
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [
