@@ -185,9 +185,9 @@ def estadisticas_donaciones(request):
     """Panel con estadísticas avanzadas de donaciones de la fundación."""
     usuario = get_usuario_actual(request)
     fundacion = usuario.fundacion_asignada
-    donaciones = Transaccion.objects.filter(fundacion=fundacion, tipo__nombre_tipo='Donación')
+    donaciones = Transaccion.objects.filter(fundacion=fundacion, tipo__nombre_tipo='Donación', prenda__isnull=False).select_related('prenda', 'user_origen')
     resumen = donaciones.values('estado').annotate(total=Count('id'))
-    prendas = Prenda.objects.filter(pk__in=Transaccion.objects.filter(fundacion=fundacion).values_list('prenda_id', flat=True))
+    prendas = Prenda.objects.filter(pk__in=Transaccion.objects.filter(fundacion=fundacion, prenda__isnull=False).values_list('prenda_id', flat=True))
     context = {
         'fundacion': fundacion,
         'donaciones': donaciones,

@@ -49,10 +49,10 @@
                                 {% for donacion in donaciones %}
                                     <tr>
                                         <td>{{ donacion.id }}</td>
-                                        <td>{{ donacion.prenda.nombre }}</td>
+                                        <td>{{ donacion.prenda.nombre if donacion.prenda else 'N/A' }}</td>
                                         <td>{{ donacion.user_origen.nombre }}</td>
                                         <td>
-                                            <span class="badge 
+                                            <span class="badge
                                                 {% if donacion.estado == 'COMPLETADA' %} bg-success
                                                 {% elif donacion.estado == 'PENDIENTE' %} bg-warning text-dark
                                                 {% elif donacion.estado == 'RECHAZADA' %} bg-danger
