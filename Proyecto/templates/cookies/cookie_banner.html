@@ -1,5 +1,5 @@
 <!-- Banner de Cookies -->
-<div id="cookie-banner" class="cookie-banner" style="display: none;">
+<div id="cookie-banner" class="cookie-banner" {% if not request.COOKIES.cookie_consent %}style="display: block;"{% else %}style="display: none;"{% endif %}>
     <div class="cookie-banner-content">
         <div class="cookie-banner-text">
             <h5><i class="bi bi-shield-check"></i> Configuración de Cookies</h5>
