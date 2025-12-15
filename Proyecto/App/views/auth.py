@@ -370,7 +370,7 @@ def actualizar_logo_fundacion(request, id_fundacion):
         fundacion.imagen_fundacion = request.FILES['imagen_fundacion']
         fundacion.save()
         messages.success(request, 'Logo de fundación actualizado.')
-        return redirect('panel_fundacion', id_fundacion=fundacion.id_fundacion)
+        return redirect('panel_fundacion')
     messages.error(request, 'Sube una imagen válida.')
     return redirect('panel_fundacion')
 
