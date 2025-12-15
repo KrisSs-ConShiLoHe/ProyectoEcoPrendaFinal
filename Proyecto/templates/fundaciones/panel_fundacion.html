@@ -3,73 +3,360 @@
 {% block title %}Panel de Fundación - {{ fundacion.nombre }} - EcoPrenda{% endblock %}
 
 {% block content %}
-
-<div class="container py-4">
-    <h2 class="mb-4 text-center">
-        <i class="bi bi-house-heart"></i> Panel de Fundación
-    </h2>
-    <div class="row justify-content-center mb-4">
-        <div class="col-lg-6">
-            <div class="card mb-3 border-primary shadow">
-                <div class="card-header bg-primary text-white">
-                    <i class="bi bi-person-badge"></i> {{ fundacion.nombre }}
+<div class="container-fluid py-4">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="mb-1">
+                        <i class="bi bi-house-heart text-primary"></i> Panel de Fundación
+                    </h1>
+                    <p class="text-muted mb-0">Bienvenido al centro de control de {{ fundacion.nombre }}</p>
                 </div>
-                <div class="card-body">
-                    <div class="col-lg-4 d-flex align-items-center justify-content-center">
-                        {% if fundacion.imagen_fundacion %}
-                            <img src="{{ fundacion.imagen_fundacion.url }}" class="card-img-top" alt="Logo de {{ fundacion.nombre }}" style="height: 200px; object-fit: cover;">
-                        {% else %}
-                            <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted" style="height: 200px;">
-                                <span>Sin imagen</span>
-                            </div>
-                        {% endif %}
-                    </div>
-                    <p class="mb-1"><strong>Correo:</strong> {{ fundacion.correo_contacto }}</p>
-                    <p class="mb-1"><strong>Teléfono:</strong> {{ fundacion.telefono }}</p>
-                    <p class="mb-1"><strong>Dirección:</strong> {{ fundacion.direccion }}</p>
-                    <p class="mb-2"><strong>Descripción:</strong> {{ fundacion.descripcion }}</p>
-                    <span class="badge {% if fundacion.activa %}bg-success{% else %}bg-secondary{% endif %}">
-                        {% if fundacion.activa %}Activa{% else %}Inactiva{% endif %}
-                    </span>
-                </div>
-                <div class="card-footer text-center bg-light">
-                    <form action="{% url 'actualizar_logo_fundacion' fundacion.id_fundacion %}" method="post" enctype="multipart/form-data" class="d-inline-block">
-                        {% csrf_token %}
-                        <input type="file" id="imagen_fundacion" name="imagen_fundacion" accept="image/*" class="form-control d-inline-block" style="width:auto;display:inline" required>
-                        <button type="submit" class="btn btn-outline-primary btn-sm mb-1 mt-1">
-                            <i class="bi bi-upload"></i> Cambiar logo
-                        </button>
-                    </form>
+                <div>
+                    <a href="{% url 'editar_fundacion' %}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-pencil-square"></i> Editar Fundación
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row g-4 text-center">
-        <div class="col-lg-4">
-            <a href="{% url 'mis_campanas' %}" class="card shadow h-100 btn btn-light p-0">
+    <!-- Foundation Profile Section -->
+    <div class="row mb-4">
+        <div class="col-xl-4 col-lg-5 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-badge"></i> Perfil de la Fundación
+                    </h5>
+                </div>
+                <div class="card-body text-center">
+                    {% if fundacion.imagen_fundacion %}
+                        <img src="{{ fundacion.imagen_fundacion.url }}" alt="Logo de {{ fundacion.nombre }}"
+                             class="img-fluid rounded-circle mb-3" style="max-height: 150px; max-width: 150px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                             style="width: 150px; height: 150px;">
+                            <i class="bi bi-building display-4 text-muted"></i>
+                        </div>
+                    {% endif %}
+                    <h4 class="card-title">{{ fundacion.nombre }}</h4>
+                    <span class="badge {% if fundacion.activa %}bg-success{% else %}bg-secondary{% endif %} fs-6 mb-3">
+                        {% if fundacion.activa %}Activa{% else %}Inactiva{% endif %}
+                    </span>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="border-start border-primary border-4 ps-3">
+                                <small class="text-muted">CORREO DE CONTACTO</small>
+                                <p class="mb-0 fw-semibold">{{ fundacion.correo_contacto|default:"No especificado" }}</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="border-start border-success border-4 ps-3">
+                                <small class="text-muted">TELÉFONO</small>
+                                <p class="mb-0 fw-semibold">{{ fundacion.telefono|default:"No especificado" }}</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="border-start border-info border-4 ps-3">
+                                <small class="text-muted">DIRECCIÓN</small>
+                                <p class="mb-0 fw-semibold">{{ fundacion.direccion|default:"No especificada" }}</p>
+                            </div>
+                        </div>
+                        {% if fundacion.lat and fundacion.lng %}
+                        <div class="col-12">
+                            <div class="border-start border-warning border-4 ps-3">
+                                <small class="text-muted">COORDENADAS</small>
+                                <p class="mb-0 fw-semibold">{{ fundacion.lat|floatformat:6 }}, {{ fundacion.lng|floatformat:6 }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-8 col-lg-7">
+            <div class="row g-4">
+                <!-- Description -->
+                <div class="col-12">
+                    <div class="card shadow h-100">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">
+                                <i class="bi bi-file-text"></i> Descripción
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-0">{{ fundacion.descripcion|default:"Sin descripción"|linebreaks }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Benefits and Responsibilities -->
+                <div class="col-md-6">
+                    <div class="card shadow h-100">
+                        <div class="card-header bg-success text-white">
+                            <h6 class="mb-0">
+                                <i class="bi bi-heart"></i> Beneficios de la Donación
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-0 small">{{ fundacion.beneficios_donacion|default:"No especificado"|linebreaks }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card shadow h-100">
+                        <div class="card-header bg-warning text-dark">
+                            <h6 class="mb-0">
+                                <i class="bi bi-exclamation-triangle"></i> Responsabilidad del Donante
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-0 small">{{ fundacion.responsabilidad_donante|default:"No especificada"|linebreaks }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Images Gallery -->
+                {% if fundacion.imagenes_adicionales %}
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0">
+                                <i class="bi bi-images"></i> Galería de Imágenes
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                {% for imagen in fundacion.imagenes_adicionales %}
+                                <div class="col-md-3 col-sm-6">
+                                    <img src="{{ imagen }}" alt="Imagen de la fundación"
+                                         class="img-fluid rounded shadow-sm" style="height: 120px; width: 100%; object-fit: cover;">
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Dashboard -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3 class="mb-3">
+                <i class="bi bi-graph-up"></i> Estadísticas Generales
+            </h3>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow border-primary h-100">
+                <div class="card-body text-center">
+                    <div class="display-4 text-primary mb-2">
+                        <i class="bi bi-gift"></i>
+                    </div>
+                    <h2 class="mb-1">{{ total_donaciones }}</h2>
+                    <p class="text-muted mb-0">Total Donaciones</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow border-warning h-100">
+                <div class="card-body text-center">
+                    <div class="display-4 text-warning mb-2">
+                        <i class="bi bi-clock"></i>
+                    </div>
+                    <h2 class="mb-1">{{ donaciones_pendientes }}</h2>
+                    <p class="text-muted mb-0">Donaciones Pendientes</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow border-success h-100">
+                <div class="card-body text-center">
+                    <div class="display-4 text-success mb-2">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <h2 class="mb-1">{{ donaciones_completadas }}</h2>
+                    <p class="text-muted mb-0">Donaciones Completadas</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow border-info h-100">
+                <div class="card-body text-center">
+                    <div class="display-4 text-info mb-2">
+                        <i class="bi bi-tree"></i>
+                    </div>
+                    <h2 class="mb-1">{{ impacto.total_carbono|default:"0"|floatformat:1 }}</h2>
+                    <p class="text-muted mb-0">kg CO₂ Evitados</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Donations and Campaigns -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+            <div class="card shadow h-100">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-gift"></i> Donaciones Recientes
+                    </h5>
+                    <a href="{% url 'gestionar_donaciones' %}" class="btn btn-sm btn-outline-primary">
+                        Ver Todas
+                    </a>
+                </div>
                 <div class="card-body">
-                    <i class="bi bi-megaphone display-4 text-primary"></i>
-                    <h5 class="card-title mt-2">Mis Campañas</h5>
-                    <p class="card-text">Crea, administra y haz seguimiento a las campañas activas de tu fundación.</p>
+                    {% if donaciones_recibidas %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Prenda</th>
+                                    <th>Donante</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for donacion in donaciones_recibidas %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'detalle_prenda' donacion.prenda.id_prenda %}" class="text-decoration-none">
+                                            {{ donacion.prenda.nombre }}
+                                        </a>
+                                    </td>
+                                    <td>{{ donacion.user_origen.nombre }}</td>
+                                    <td>{{ donacion.fecha_transaccion|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if donacion.estado == 'COMPLETADA' %}success{% elif donacion.estado == 'PENDIENTE' %}warning{% else %}info{% endif %}">
+                                            {{ donacion.estado }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-inbox display-4 text-muted"></i>
+                        <p class="text-muted mt-2">Aún no has recibido donaciones</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-megaphone"></i> Campañas Activas
+                    </h5>
+                    <a href="{% url 'mis_campanas' %}" class="btn btn-sm btn-outline-primary">
+                        Ver Todas
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if campanas %}
+                    <div class="list-group list-group-flush">
+                        {% for campana in campanas %}
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">{{ campana.nombre }}</h6>
+                                    <p class="mb-1 small text-muted">{{ campana.descripcion|truncatechars:80 }}</p>
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar"></i> {{ campana.fecha_inicio|date:"d/m/Y" }}
+                                        {% if campana.fecha_fin %} - {{ campana.fecha_fin|date:"d/m/Y" }}{% endif %}
+                                    </small>
+                                </div>
+                                <span class="badge bg-primary">{{ campana.prendas_donadas }}/{{ campana.objetivo_prendas }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-megaphone-off display-4 text-muted"></i>
+                        <p class="text-muted mt-2">No tienes campañas activas</p>
+                        <a href="{% url 'mis_campanas' %}" class="btn btn-primary btn-sm">Crear Campaña</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-12">
+            <h3 class="mb-3">
+                <i class="bi bi-gear"></i> Acciones Rápidas
+            </h3>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-xl-3 col-md-6">
+            <a href="{% url 'mis_campanas' %}" class="card shadow h-100 text-decoration-none">
+                <div class="card-body text-center">
+                    <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="bi bi-megaphone text-white fs-4"></i>
+                    </div>
+                    <h6 class="card-title text-primary">Gestionar Campañas</h6>
+                    <p class="card-text small text-muted">Crea y administra campañas de donación</p>
                 </div>
             </a>
         </div>
-        <div class="col-lg-4">
-            <a href="{% url 'gestionar_donaciones' %}" class="card shadow h-100 btn btn-light p-0">
-                <div class="card-body">
-                    <i class="bi bi-gift display-4 text-success"></i>
-                    <h5 class="card-title mt-2">Gestionar Donaciones</h5>
-                    <p class="card-text">Visualiza, confirma y da seguimiento a todas las donaciones recibidas.</p>
+
+        <div class="col-xl-3 col-md-6">
+            <a href="{% url 'gestionar_donaciones' %}" class="card shadow h-100 text-decoration-none">
+                <div class="card-body text-center">
+                    <div class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="bi bi-gift text-white fs-4"></i>
+                    </div>
+                    <h6 class="card-title text-success">Gestionar Donaciones</h6>
+                    <p class="card-text small text-muted">Revisa y confirma donaciones pendientes</p>
                 </div>
             </a>
         </div>
-        <div class="col-lg-4">
-            <a href="{% url 'estadisticas_donaciones' %}" class="card shadow h-100 btn btn-light p-0">
-                <div class="card-body">
-                    <i class="bi bi-bar-chart-line display-4 text-info"></i>
-                    <h5 class="card-title mt-2">Estadísticas</h5>
-                    <p class="card-text">Consulta el impacto y los datos clave de tus donaciones.</p>
+
+        <div class="col-xl-3 col-md-6">
+            <a href="{% url 'estadisticas_donaciones' %}" class="card shadow h-100 text-decoration-none">
+                <div class="card-body text-center">
+                    <div class="bg-info rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="bi bi-bar-chart-line text-white fs-4"></i>
+                    </div>
+                    <h6 class="card-title text-info">Ver Estadísticas</h6>
+                    <p class="card-text small text-muted">Analiza el impacto de tus donaciones</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <a href="{% url 'editar_fundacion' %}" class="card shadow h-100 text-decoration-none">
+                <div class="card-body text-center">
+                    <div class="bg-warning rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="bi bi-pencil-square text-white fs-4"></i>
+                    </div>
+                    <h6 class="card-title text-warning">Editar Perfil</h6>
+                    <p class="card-text small text-muted">Actualiza la información de tu fundación</p>
                 </div>
             </a>
         </div>

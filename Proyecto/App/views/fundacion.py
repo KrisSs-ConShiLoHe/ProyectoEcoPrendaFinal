@@ -9,14 +9,14 @@ import json
 import logging  # Agregado para logging
 
 from ..models import (
-    Usuario, Prenda, Transaccion, TipoTransaccion, 
-    Fundacion, Mensaje, ImpactoAmbiental, 
+    Usuario, Prenda, Transaccion, TipoTransaccion,
+    Fundacion, Mensaje, ImpactoAmbiental,
     Logro, UsuarioLogro, CampanaFundacion
 )
 from ..decorators import (
-    login_required_custom, 
+    login_required_custom,
     anonymous_required,
-    ajax_login_required, 
+    ajax_login_required,
     session_valid,
     admin_required,
     representante_fundacion_required,
@@ -29,6 +29,12 @@ from django.conf import settings
 
 from ..forms import RegistroForm, PerfilForm, PrendaForm
 from .auth import get_usuario_actual
+from ..cloudinary_utils import (
+    subir_imagen_prenda,
+    subir_imagen_usuario,
+    subir_logo_fundacion,
+    validar_imagen,
+)
 
 # Configuración de logging
 logger = logging.getLogger(__name__)
@@ -378,9 +384,19 @@ def editar_fundacion(request):
         imagenes_adicionales = fundacion.imagenes_adicionales or []
         if 'imagenes_adicionales' in request.FILES:
             for img in request.FILES.getlist('imagenes_adicionales'):
-                # Aquí asumimos que subes a Cloudinary o similar, por ahora guardamos URLs dummy
-                # En producción, integrar con Cloudinary
-                imagenes_adicionales.append(f"/media/fundaciones/{img.name}")  # Placeholder
+                # Validar imagen antes de subir
+                es_valida, mensaje_error = validar_imagen(img)
+                if not es_valida:
+                    messages.error(request, f'Imagen adicional inválida: {mensaje_error}')
+                    continue
+
+                # Subir imagen a Cloudinary
+                try:
+                    url_imagen = subir_imagen_prenda(imagen=img, carpeta='fundaciones')
+                    imagenes_adicionales.append(url_imagen)
+                except Exception as e:
+                    logger.error(f"Error subiendo imagen adicional para fundación {fundacion.id_fundacion}: {e}")
+                    messages.error(request, f'Error al subir imagen adicional: {str(e)}')
         fundacion.imagenes_adicionales = imagenes_adicionales
 
         fundacion.save()
