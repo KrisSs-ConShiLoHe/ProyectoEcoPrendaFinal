@@ -34,7 +34,7 @@
                 </div>
                 <div class="card-body text-center">
                     {% if fundacion.imagen_fundacion %}
-                        <img src="{{ fundacion.imagen_fundacion.url }}" alt="Logo de {{ fundacion.nombre }}"
+                        <img src="{{ fundacion.imagen_fundacion }}" alt="Logo de {{ fundacion.nombre }}"
                              class="img-fluid rounded-circle mb-3" style="max-height: 150px; max-width: 150px; object-fit: cover;">
                     {% else %}
                         <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3"

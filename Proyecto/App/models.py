@@ -120,7 +120,7 @@ class Fundacion(models.Model):
     correo_contacto = models.EmailField(max_length=120, blank=True, null=True)  # Cambié a EmailField.
     telefono = models.CharField(max_length=20, blank=True, null=True)
     direccion = models.CharField(max_length=200, blank=True, null=True)
-    imagen_fundacion = models.ImageField(upload_to='fundaciones/', blank=True, null=True, max_length=200, help_text='Imagen o logo de la fundación')
+    imagen_fundacion = models.CharField(max_length=500, blank=True, null=True, help_text='URL de la imagen en Cloudinary')
     descripcion = models.TextField(blank=True, null=True)
     activa = models.BooleanField(default=True)
     representante = models.OneToOneField(Usuario, on_delete=models.SET_NULL, null=True, blank=True, related_name='fundacion_representada')  # Cambié a SET_NULL.
