@@ -53,6 +53,7 @@ urlpatterns = [
     # Fundaciones
     path('fundaciones/', views.lista_fundaciones, name='lista_fundaciones'),
     path('fundacion/<int:id_fundacion>/', views.detalle_fundacion, name='detalle_fundacion'),
+    path('fundacion/editar/', views.editar_fundacion, name='editar_fundacion'),
     
     # Impacto ambiental
     path('impacto/', views.panel_impacto, name='panel_impacto'),

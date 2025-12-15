@@ -62,11 +62,15 @@ def detalle_fundacion(request, id_fundacion):
         total_energia=Sum('energia_ahorrada_kwh')
     )
 
+    # Verificar si el usuario es representante de esta fundación
+    puede_editar = usuario.es_representante_fundacion() and usuario.fundacion_asignada == fundacion
+
     context = {
         'usuario': usuario,
         'fundacion': fundacion,
         'donaciones': donaciones,
         'impacto_total': impacto_total,
+        'puede_editar': puede_editar,
     }
     return render(request, 'fundaciones/detalle_fundacion.html', context)
 
@@ -345,5 +349,46 @@ def actualizar_ubicacion_fundacion(request, id_fundacion):
         
         except Exception as e:
             messages.error(request, f'Error: {str(e)}')
-    
+
     return redirect('detalle_fundacion', id_fundacion=id_fundacion)
+
+@representante_fundacion_required
+def editar_fundacion(request):
+    """Permite al representante editar la información de su fundación."""
+    usuario = get_usuario_actual(request)
+    fundacion = usuario.fundacion_asignada
+
+    if request.method == 'POST':
+        # Actualizar campos básicos
+        fundacion.nombre = request.POST.get('nombre', fundacion.nombre)
+        fundacion.correo_contacto = request.POST.get('correo_contacto', fundacion.correo_contacto)
+        fundacion.telefono = request.POST.get('telefono', fundacion.telefono)
+        fundacion.direccion = request.POST.get('direccion', fundacion.direccion)
+        fundacion.descripcion = request.POST.get('descripcion', fundacion.descripcion)
+
+        # Nuevos campos
+        fundacion.beneficios_donacion = request.POST.get('beneficios_donacion', fundacion.beneficios_donacion)
+        fundacion.responsabilidad_donante = request.POST.get('responsabilidad_donante', fundacion.responsabilidad_donante)
+
+        # Manejar imagen del logo
+        if 'imagen_fundacion' in request.FILES:
+            fundacion.imagen_fundacion = request.FILES['imagen_fundacion']
+
+        # Manejar imágenes adicionales (JSON field)
+        imagenes_adicionales = fundacion.imagenes_adicionales or []
+        if 'imagenes_adicionales' in request.FILES:
+            for img in request.FILES.getlist('imagenes_adicionales'):
+                # Aquí asumimos que subes a Cloudinary o similar, por ahora guardamos URLs dummy
+                # En producción, integrar con Cloudinary
+                imagenes_adicionales.append(f"/media/fundaciones/{img.name}")  # Placeholder
+        fundacion.imagenes_adicionales = imagenes_adicionales
+
+        fundacion.save()
+        messages.success(request, 'Información de la fundación actualizada exitosamente.')
+        return redirect('panel_fundacion')
+
+    context = {
+        'usuario': usuario,
+        'fundacion': fundacion,
+    }
+    return render(request, 'fundaciones/editar_fundacion.html', context)

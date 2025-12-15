@@ -25,10 +25,10 @@
                 <div class="card mt-3">
                     <div class="card-body">
                         <h6><i class="bi bi-info-circle"></i> Información de Contacto</h6>
-                        
+
                         {% if fundacion.direccion %}
                         <p class="mb-2">
-                            <i class="bi bi-geo-alt"></i> 
+                            <i class="bi bi-geo-alt"></i>
                             <strong>Dirección:</strong><br>
                             {{ fundacion.direccion }}
                         </p>
@@ -36,7 +36,7 @@
 
                         {% if fundacion.telefono %}
                         <p class="mb-2">
-                            <i class="bi bi-telephone"></i> 
+                            <i class="bi bi-telephone"></i>
                             <strong>Teléfono:</strong><br>
                             <a href="tel:{{ fundacion.telefono }}">{{ fundacion.telefono }}</a>
                         </p>
@@ -44,13 +44,65 @@
 
                         {% if fundacion.correo_contacto %}
                         <p class="mb-0">
-                            <i class="bi bi-envelope"></i> 
+                            <i class="bi bi-envelope"></i>
                             <strong>Correo:</strong><br>
                             <a href="mailto:{{ fundacion.correo_contacto }}">{{ fundacion.correo_contacto }}</a>
                         </p>
                         {% endif %}
                     </div>
                 </div>
+
+                {% if puede_editar %}
+                <div class="card mt-3">
+                    <div class="card-body text-center">
+                        <a href="{% url 'editar_fundacion' %}" class="btn btn-primary">
+                            <i class="bi bi-pencil-square"></i> Editar Información de la Fundación
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if fundacion.descripcion %}
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6><i class="bi bi-file-text"></i> Descripción</h6>
+                        <p>{{ fundacion.descripcion }}</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if fundacion.beneficios_donacion %}
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6><i class="bi bi-heart"></i> Beneficios de la Donación</h6>
+                        <p>{{ fundacion.beneficios_donacion }}</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if fundacion.responsabilidad_donante %}
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6><i class="bi bi-exclamation-triangle"></i> Responsabilidad del Donante</h6>
+                        <p>{{ fundacion.responsabilidad_donante }}</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if fundacion.imagenes_adicionales %}
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6><i class="bi bi-images"></i> Galería de Imágenes</h6>
+                        <div class="row">
+                            {% for imagen in fundacion.imagenes_adicionales %}
+                            <div class="col-md-4 mb-3">
+                                <img src="{{ imagen }}" alt="Imagen de la fundación" class="img-fluid rounded">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
 
             <div class="col-md-8">

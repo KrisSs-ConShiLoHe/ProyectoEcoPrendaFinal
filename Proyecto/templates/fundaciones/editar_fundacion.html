@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Fundación - EcoPrenda{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'panel_fundacion' %}">Panel Fundación</a></li>
+                <li class="breadcrumb-item active">Editar Fundación</li>
+            </ol>
+        </nav>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="bi bi-pencil-square"></i> Editar Información de la Fundación
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="nombre" class="form-label">Nombre de la Fundación *</label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre"
+                                           value="{{ fundacion.nombre }}" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="correo_contacto" class="form-label">Correo de Contacto *</label>
+                                    <input type="email" class="form-control" id="correo_contacto" name="correo_contacto"
+                                           value="{{ fundacion.correo_contacto }}" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="telefono" class="form-label">Teléfono</label>
+                                    <input type="tel" class="form-control" id="telefono" name="telefono"
+                                           value="{{ fundacion.telefono }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="direccion" class="form-label">Dirección</label>
+                                    <input type="text" class="form-control" id="direccion" name="direccion"
+                                           value="{{ fundacion.direccion }}">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="descripcion" name="descripcion" rows="3">{{ fundacion.descripcion }}</textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="beneficios_donacion" class="form-label">Beneficios de la Donación</label>
+                                <textarea class="form-control" id="beneficios_donacion" name="beneficios_donacion" rows="3"
+                                          placeholder="Describe los beneficios que obtienen los donantes">{{ fundacion.beneficios_donacion }}</textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="responsabilidad_donante" class="form-label">Responsabilidad del Donante</label>
+                                <textarea class="form-control" id="responsabilidad_donante" name="responsabilidad_donante" rows="3"
+                                          placeholder="Describe las responsabilidades que tienen los donantes">{{ fundacion.responsabilidad_donante }}</textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="imagen_fundacion" class="form-label">Logo de la Fundación</label>
+                                <input type="file" class="form-control" id="imagen_fundacion" name="imagen_fundacion" accept="image/*">
+                                {% if fundacion.imagen_fundacion %}
+                                <small class="text-muted">Imagen actual: {{ fundacion.imagen_fundacion.name }}</small>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="imagenes_adicionales" class="form-label">Imágenes Adicionales</label>
+                                <input type="file" class="form-control" id="imagenes_adicionales" name="imagenes_adicionales" accept="image/*" multiple>
+                                <small class="text-muted">Puedes seleccionar múltiples imágenes</small>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{% url 'panel_fundacion' %}" class="btn btn-secondary me-md-2">
+                                    <i class="bi bi-arrow-left"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle"></i> Guardar Cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

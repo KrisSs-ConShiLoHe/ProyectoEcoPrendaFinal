@@ -133,9 +133,29 @@ class Fundacion(models.Model):
     )
 
     lng = models.FloatField(
-        blank=True, 
+        blank=True,
         null=True,
         help_text='Longitud de la fundación (OBLIGATORIO para aparecer en mapa)'
+    )
+
+    # Nuevos campos para información descriptiva
+    beneficios_donacion = models.TextField(
+        blank=True,
+        null=True,
+        help_text='Beneficios de la donación: Explicar los beneficios de donar ropa, como la reducción de desechos y la creación de valor social.'
+    )
+    responsabilidad_donante = models.TextField(
+        blank=True,
+        null=True,
+        help_text='Responsabilidad del donante: Informar a los donantes sobre la responsabilidad de verificar el estado de la ropa antes de donarla.'
+    )
+
+    # Campo para imágenes adicionales (almacenadas como JSON list de URLs)
+    imagenes_adicionales = models.JSONField(
+        blank=True,
+        null=True,
+        default=list,
+        help_text='Lista de URLs de imágenes adicionales de la fundación (físico, publicaciones, personal, etc.)'
     )
 
     class Meta:

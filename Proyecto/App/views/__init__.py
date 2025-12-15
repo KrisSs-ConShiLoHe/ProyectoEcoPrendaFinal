@@ -62,6 +62,7 @@ from .mensaje import (
 from .fundacion import (
     lista_fundaciones,
     detalle_fundacion,
+    editar_fundacion,
     panel_fundacion,
     gestionar_donaciones,
     confirmar_recepcion_donacion,
@@ -146,6 +147,7 @@ __all__ = [
     'enviar_mensaje',
     'lista_fundaciones',
     'detalle_fundacion',
+    'editar_fundacion',
     'panel_fundacion',
     'gestionar_donaciones',
     'confirmar_recepcion_donacion',
