@@ -259,16 +259,7 @@ def editar_prenda(request, id_prenda):
             prenda.talla = talla
             # NO modificar prenda.estado (se controla por transacciones, no por edición)
             if imagen:
-                try:
-                    resultado = subir_imagen_prenda(imagen, prenda.id_prenda)
-                    if resultado and resultado.get('secure_url'):
-                        prenda.imagen_prenda = resultado['secure_url']
-                    else:
-                        # Fallback para desarrollo local
-                        prenda.imagen_prenda = f"/media/prendas/{imagen.name}"
-                except CloudinaryError:
-                    # Cloudinary no disponible, usar URL local
-                    prenda.imagen_prenda = f"/media/prendas/{imagen.name}"
+                prenda.imagen_prenda = imagen
             prenda.save()
             messages.success(request, 'Prenda actualizada correctamente.')
             return redirect('detalle_prenda', id_prenda=prenda.id_prenda)

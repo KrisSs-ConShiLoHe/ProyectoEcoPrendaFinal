@@ -6,7 +6,7 @@
 <section class="py-5">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-lg-6">
                 <div class="card shadow">
                     <div class="card-body p-4">
                         <h2 class="mb-4">
@@ -201,6 +201,59 @@
                           });
                         })();
                         </script>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Analysis Section -->
+            <div class="col-lg-5">
+                <div id="clarifai-analysis" class="card shadow d-none">
+                    <div class="card-body p-4">
+                        <h3 class="mb-4">
+                            <i class="bi bi-robot text-primary"></i> Análisis IA
+                        </h3>
+
+                        <!-- Loading State -->
+                        <div id="analysis-loading" class="text-center d-none">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Analizando...</span>
+                            </div>
+                            <p class="mt-2 text-muted">Analizando imagen con IA...</p>
+                        </div>
+
+                        <!-- Success State -->
+                        <div id="analysis-success" class="d-none">
+                            <div class="alert alert-success">
+                                <i class="bi bi-check-circle-fill"></i> ¡Análisis completado!
+                            </div>
+
+                            <div class="mb-3">
+                                <strong>Categoría sugerida:</strong>
+                                <span id="categoria-sugerida" class="text-primary">No detectada</span>
+                                <span id="confianza" class="text-muted small"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <strong>Prendas detectadas:</strong>
+                                <span id="total-prendas" class="badge bg-info">0</span>
+                            </div>
+
+                            <div class="mb-3">
+                                <strong>Descripción automática:</strong>
+                                <p id="descripcion-auto" class="text-muted small">Sin descripción disponible</p>
+                            </div>
+
+                            <button id="aplicar-sugerencias" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-magic"></i> Aplicar sugerencias
+                            </button>
+                        </div>
+
+                        <!-- Error State -->
+                        <div id="analysis-error" class="alert alert-danger d-none">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <strong>Error en el análisis:</strong>
+                            <span id="error-message">Error desconocido</span>
+                        </div>
                     </div>
                 </div>
             </div>

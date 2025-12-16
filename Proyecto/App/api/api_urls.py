@@ -40,4 +40,7 @@ urlpatterns = [
     path('impacto-total/', api_views.ImpactoTotalAPIView.as_view(), name='api-impacto-total'),
 
     path('prendas-simple-list/', api_views.PrendaSimpleListAPIView.as_view(), name='api-prenda-simple-list'),
+
+    # Clarifai AI analysis
+    path('analizar-imagen-clarifai/', api_views.analizar_imagen_clarifai, name='api-analizar-imagen-clarifai'),
 ]

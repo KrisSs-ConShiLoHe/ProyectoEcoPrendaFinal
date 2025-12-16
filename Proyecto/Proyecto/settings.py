@@ -307,8 +307,8 @@ if not DEBUG:
             from django.core.exceptions import ImproperlyConfigured
             raise ImproperlyConfigured(f'CLOUDINARY_{key} no está configurada en variables de entorno')
 
-# Usar Cloudinary como almacenamiento por defecto
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# Usar almacenamiento local por defecto (solo prendas usan Cloudinary)
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # Configuración adicional de Cloudinary
 import cloudinary

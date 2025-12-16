@@ -28,13 +28,7 @@ from ..decorators import (
 from django.conf import settings
 
 from ..cloudinary_utils import (
-    subir_imagen_prenda,
-    subir_imagen_usuario,
-    subir_logo_fundacion,
-    subir_imagen_campana,
     validar_imagen,
-    eliminar_imagen_cloudinary,
-    extraer_public_id_de_url
 )
 
 from ..carbon_utils import (
@@ -341,7 +335,14 @@ def actualizar_foto_perfil(request):
     """Permite al usuario actualizar su foto de perfil."""
     usuario = get_usuario_actual(request)
     if request.method == 'POST' and 'imagen_usuario' in request.FILES:
-        usuario.imagen_usuario = request.FILES['imagen_usuario']
+        # Validar imagen antes de guardar
+        imagen = request.FILES['imagen_usuario']
+        es_valida, mensaje_error = validar_imagen(imagen)
+        if not es_valida:
+            messages.error(request, mensaje_error or 'Imagen inválida. Solo JPG/PNG, máximo 5MB.')
+            return redirect('perfil')
+
+        usuario.imagen_usuario = imagen
         usuario.save()
         messages.success(request, 'Foto de perfil actualizada.')
         return redirect('perfil')

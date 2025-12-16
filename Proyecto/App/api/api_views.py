@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db.models import Sum, Count, Q
 from django.utils import timezone
+import logging
 
 from ..models import (
     Usuario, Prenda, Transaccion, TipoTransaccion,
@@ -14,8 +15,9 @@ from ..serializers import (
     TipoTransaccionSerializer, FundacionSerializer, MensajeSerializer,
     ImpactoAmbientalSerializer, EstadisticasSerializer, ImpactoTotalSerializer,
     LogroSerializer, UsuarioLogroSerializer, CampanaFundacionSerializer,
-    PrendaSimpleSerializer, 
+    PrendaSimpleSerializer,
 )
+from ..clarifai_utils import analizar_imagen_completa
 
 # Funciones basadas en vistas
 
@@ -505,3 +507,49 @@ class PrendaSimpleListAPIView(generics.ListAPIView):
     """Lista de prendas sin relaciones (optimizada)"""
     queryset = Prenda.objects.all()
     serializer_class = PrendaSimpleSerializer
+
+
+@api_view(['POST'])
+def analizar_imagen_clarifai(request):
+    """
+    Endpoint para analizar imagen de prenda con Clarifai AI.
+    Recibe imagen_prenda y devuelve análisis de categoría, descripción, etc.
+    """
+    try:
+        if 'imagen_prenda' not in request.FILES:
+            return Response({'error': 'No se proporcionó imagen_prenda'}, status=status.HTTP_400_BAD_REQUEST)
+
+        imagen_file = request.FILES['imagen_prenda']
+
+        # Convertir archivo a bytes para Clarifai
+        imagen_bytes = imagen_file.read()
+
+        # Analizar con Clarifai
+        analisis = analizar_imagen_completa(imagen_bytes=imagen_bytes)
+
+        if not analisis['es_valida']:
+            return Response({
+                'error': analisis['mensaje_validacion'],
+                'categoria_sugerida': None,
+                'confianza': 0.0,
+                'descripcion_auto': '',
+                'total_prendas_detectadas': 0
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Preparar respuesta
+        respuesta = {
+            'categoria_sugerida': analisis['categoria_sugerida'],
+            'confianza': analisis['confianza'],
+            'descripcion_auto': analisis['descripcion_auto'],
+            'total_prendas_detectadas': analisis['total_prendas_detectadas'],
+            'mensaje': analisis['resumen']
+        }
+
+        logger = logging.getLogger(__name__)
+        logger.info(f"Análisis Clarifai completado: {respuesta}")
+        return Response(respuesta)
+
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error en análisis Clarifai: {str(e)}")
+        return Response({'error': 'Error interno del servidor'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

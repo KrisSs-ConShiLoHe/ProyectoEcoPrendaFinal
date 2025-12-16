@@ -30,8 +30,6 @@ from django.conf import settings
 from ..forms import RegistroForm, PerfilForm, PrendaForm
 from .auth import get_usuario_actual
 from ..cloudinary_utils import (
-    subir_imagen_cloudinary,
-    subir_logo_fundacion,
     validar_imagen,
 )
 
@@ -382,12 +380,7 @@ def editar_fundacion(request):
             if not es_valida:
                 messages.error(request, f'Imagen del logo inválida: {mensaje_error}')
             else:
-                try:
-                    resultado = subir_logo_fundacion(request.FILES['imagen_fundacion'], fundacion.id_fundacion)
-                    fundacion.imagen_fundacion = resultado.get('secure_url')
-                except Exception as e:
-                    logger.error(f"Error subiendo logo para fundación {fundacion.id_fundacion}: {e}")
-                    messages.error(request, f'Error al subir logo: {str(e)}')
+                fundacion.imagen_fundacion = request.FILES['imagen_fundacion']
 
         # Manejar imágenes adicionales (JSON field)
         imagenes_adicionales = fundacion.imagenes_adicionales or []
@@ -399,13 +392,8 @@ def editar_fundacion(request):
                     messages.error(request, f'Imagen adicional inválida: {mensaje_error}')
                     continue
 
-                # Subir imagen a Cloudinary
-                try:
-                    resultado = subir_imagen_cloudinary(imagen=img, carpeta='ecoprenda/fundaciones')
-                    imagenes_adicionales.append(resultado.get('secure_url'))
-                except Exception as e:
-                    logger.error(f"Error subiendo imagen adicional para fundación {fundacion.id_fundacion}: {e}")
-                    messages.error(request, f'Error al subir imagen adicional: {str(e)}')
+                # Guardar imagen usando almacenamiento por defecto
+                imagenes_adicionales.append(img)
         fundacion.imagenes_adicionales = imagenes_adicionales
 
         fundacion.save()
