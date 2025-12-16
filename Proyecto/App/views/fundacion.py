@@ -31,6 +31,8 @@ from ..forms import RegistroForm, PerfilForm, PrendaForm
 from .auth import get_usuario_actual
 from ..cloudinary_utils import (
     validar_imagen,
+    subir_logo_fundacion,
+    subir_imagen_cloudinary,
 )
 
 # Configuración de logging
@@ -380,7 +382,13 @@ def editar_fundacion(request):
             if not es_valida:
                 messages.error(request, f'Imagen del logo inválida: {mensaje_error}')
             else:
-                fundacion.imagen_fundacion = request.FILES['imagen_fundacion']
+                try:
+                    resultado = subir_logo_fundacion(request.FILES['imagen_fundacion'], fundacion.id_fundacion)
+                    fundacion.imagen_fundacion = resultado['secure_url']
+                    logger.info(f"Logo de fundación {fundacion.nombre} actualizado exitosamente")
+                except Exception as e:
+                    messages.error(request, f'Error al subir el logo: {str(e)}')
+                    logger.error(f"Error al subir logo de fundación {fundacion.id_fundacion}: {str(e)}")
 
         # Manejar imágenes adicionales (JSON field)
         imagenes_adicionales = fundacion.imagenes_adicionales or []
@@ -392,8 +400,19 @@ def editar_fundacion(request):
                     messages.error(request, f'Imagen adicional inválida: {mensaje_error}')
                     continue
 
-                # Guardar imagen usando almacenamiento por defecto
-                imagenes_adicionales.append(img)
+                try:
+                    # Subir imagen a Cloudinary
+                    resultado = subir_imagen_cloudinary(
+                        imagen=img,
+                        carpeta='ecoprenda/fundaciones',
+                        public_id=f'fundacion_{fundacion.id_fundacion}_adicional_{len(imagenes_adicionales) + 1}'
+                    )
+                    # Agregar URL a la lista
+                    imagenes_adicionales.append(resultado['secure_url'])
+                    logger.info(f"Imagen adicional subida para fundación {fundacion.nombre}")
+                except Exception as e:
+                    messages.error(request, f'Error al subir imagen adicional: {str(e)}')
+                    logger.error(f"Error al subir imagen adicional para fundación {fundacion.id_fundacion}: {str(e)}")
         fundacion.imagenes_adicionales = imagenes_adicionales
 
         fundacion.save()

@@ -29,6 +29,8 @@ from django.conf import settings
 
 from ..cloudinary_utils import (
     validar_imagen,
+    subir_imagen_prenda,
+    subir_logo_fundacion,
 )
 
 from ..carbon_utils import (
@@ -342,9 +344,16 @@ def actualizar_foto_perfil(request):
             messages.error(request, mensaje_error or 'Imagen inválida. Solo JPG/PNG, máximo 5MB.')
             return redirect('perfil')
 
-        usuario.imagen_usuario = imagen
-        usuario.save()
-        messages.success(request, 'Foto de perfil actualizada.')
+        try:
+            from ..cloudinary_utils import subir_imagen_usuario
+            resultado = subir_imagen_usuario(imagen, usuario.id_usuario)
+            usuario.imagen_usuario = resultado['secure_url']
+            usuario.save()
+            logger.info(f"Foto de perfil de usuario {usuario.id_usuario} actualizada exitosamente")
+            messages.success(request, 'Foto de perfil actualizada.')
+        except Exception as e:
+            messages.error(request, f'Error al subir la foto: {str(e)}')
+            logger.error(f"Error al subir foto de perfil de usuario {usuario.id_usuario}: {str(e)}")
         return redirect('perfil')
     messages.error(request, 'Sube una imagen válida.')
     return redirect('perfil')
@@ -355,9 +364,21 @@ def actualizar_imagen_prenda(request, id_prenda):
     usuario = get_usuario_actual(request)
     prenda = get_object_or_404(Prenda, id_prenda=id_prenda, user=usuario)
     if request.method == 'POST' and 'imagen_prenda' in request.FILES:
-        prenda.imagen_prenda = request.FILES['imagen_prenda']
-        prenda.save()
-        messages.success(request, 'Imagen de prenda actualizada.')
+        # Validar imagen antes de subir
+        es_valida, mensaje_error = validar_imagen(request.FILES['imagen_prenda'])
+        if not es_valida:
+            messages.error(request, mensaje_error or 'Imagen inválida. Solo JPG/PNG, máximo 5MB.')
+            return redirect('editar_prenda', id_prenda=getattr(prenda, 'id_prenda', getattr(prenda, 'id', prenda.pk)))
+
+        try:
+            resultado = subir_imagen_prenda(request.FILES['imagen_prenda'], prenda.id_prenda)
+            prenda.imagen_prenda = resultado['secure_url']
+            prenda.save()
+            logger.info(f"Imagen de prenda {prenda.id_prenda} actualizada exitosamente")
+            messages.success(request, 'Imagen de prenda actualizada.')
+        except Exception as e:
+            messages.error(request, f'Error al subir la imagen: {str(e)}')
+            logger.error(f"Error al subir imagen de prenda {prenda.id_prenda}: {str(e)}")
         return redirect('detalle_prenda', id_prenda=getattr(prenda, 'id_prenda', getattr(prenda, 'id', prenda.pk)))
     messages.error(request, 'Sube una imagen válida.')
     return redirect('editar_prenda', id_prenda=getattr(prenda, 'id_prenda', getattr(prenda, 'id', prenda.pk)))
@@ -368,9 +389,21 @@ def actualizar_logo_fundacion(request, id_fundacion):
     usuario = get_usuario_actual(request)
     fundacion = get_object_or_404(Fundacion, id_fundacion=id_fundacion, representante=usuario)
     if request.method == 'POST' and 'imagen_fundacion' in request.FILES:
-        fundacion.imagen_fundacion = request.FILES['imagen_fundacion']
-        fundacion.save()
-        messages.success(request, 'Logo de fundación actualizado.')
+        # Validar imagen antes de subir
+        es_valida, mensaje_error = validar_imagen(request.FILES['imagen_fundacion'])
+        if not es_valida:
+            messages.error(request, mensaje_error or 'Imagen inválida. Solo JPG/PNG, máximo 5MB.')
+            return redirect('panel_fundacion')
+
+        try:
+            resultado = subir_logo_fundacion(request.FILES['imagen_fundacion'], fundacion.id_fundacion)
+            fundacion.imagen_fundacion = resultado['secure_url']
+            fundacion.save()
+            logger.info(f"Logo de fundación {fundacion.nombre} actualizado exitosamente")
+            messages.success(request, 'Logo de fundación actualizado.')
+        except Exception as e:
+            messages.error(request, f'Error al subir el logo: {str(e)}')
+            logger.error(f"Error al subir logo de fundación {fundacion.id_fundacion}: {str(e)}")
         return redirect('panel_fundacion')
     messages.error(request, 'Sube una imagen válida.')
     return redirect('panel_fundacion')
