@@ -5,11 +5,14 @@ from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
+# Add the current directory to the Python path
+sys.path.insert(0, os.path.dirname(__file__))
+
 # Setup Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Proyecto.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Proyecto.Proyecto.settings')
 django.setup()
 
-from App.models import Usuario, Fundacion
+from Proyecto.App.models import Usuario, Fundacion
 
 def test_representative_restrictions():
     """Test that representatives are restricted from accessing personal views"""

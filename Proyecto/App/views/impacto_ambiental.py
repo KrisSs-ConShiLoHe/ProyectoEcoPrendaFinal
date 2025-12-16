@@ -109,7 +109,7 @@ def panel_impacto(request):
     
     return render(request, 'impacto ambiental/panel_impacto.html', context)
 
-@login_required_custom
+@cliente_only
 def mi_impacto(request):
     """Impacto ambiental personal del usuario con equivalencias."""
     usuario = get_usuario_actual(request)

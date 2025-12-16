@@ -49,7 +49,7 @@
                                 {% for donacion in donaciones %}
                                     <tr>
                                         <td>{{ donacion.id }}</td>
-                                        <td>{{ donacion.prenda.nombre if donacion.prenda else 'N/A' }}</td>
+                                        <td>{% if donacion.prenda %}{{ donacion.prenda.nombre }}{% else %}N/A{% endif %}</td>
                                         <td>{{ donacion.user_origen.nombre }}</td>
                                         <td>
                                             <span class="badge
