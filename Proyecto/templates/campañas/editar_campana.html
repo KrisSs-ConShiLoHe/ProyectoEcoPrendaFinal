@@ -28,7 +28,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="fecha_fin" class="form-label">Fecha de Fin</label>
-                                <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" value="{{ campana.fecha_fin|date:'Y-m-d' if campana.fecha_fin else '' }}">
+                                <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" value="{% if campana.fecha_fin %}{{ campana.fecha_fin|date:'Y-m-d' }}{% endif %}">
                             </div>
                         </div>
                         <div class="mb-3">
