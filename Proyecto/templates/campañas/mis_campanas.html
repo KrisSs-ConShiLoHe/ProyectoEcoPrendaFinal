@@ -41,8 +41,12 @@
                                 <a href="{% url 'detalle_campana' campana.id %}" class="btn btn-outline-primary btn-sm">
                                     <i class="bi bi-eye"></i> Detalles
                                 </a>
-                                <!-- Opción para edición (si implementas) -->
-                                {# <a href="{% url 'editar_campana' campana.id_campana %}" class="btn btn-outline-secondary btn-sm">Editar</a> #}
+                                <a href="{% url 'editar_campana' campana.id %}" class="btn btn-outline-secondary btn-sm">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                <a href="{% url 'eliminar_campana' campana.id %}" class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </a>
                             </div>
                         </div>
                     </div>
