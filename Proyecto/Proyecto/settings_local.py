@@ -194,6 +194,3 @@ CLARIFAI_USER_ID = None
 CLARIFAI_APP_ID = None
 CLARIFAI_MODEL_ID = None
 CLARIFAI_MODEL_VERSION_ID = None
-
-
-logging.warning(f"LOG CLARIFAI_PAT: {os.environ.get('CLARIFAI_PAT')}")
