@@ -1,7 +1,7 @@
 import os
 import sys
 import django
-
+# hola xd
 # Add the project directory to the Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
