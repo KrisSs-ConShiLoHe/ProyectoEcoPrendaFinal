@@ -70,6 +70,8 @@ urlpatterns = [
     path('campanas-solidarias', views.campanas_solidarias, name='campanas_solidarias'),
     path('detalle-campana/<int:id>/', views.detalle_campana, name='detalle_campana'),
     path('donar-a-campana/<int:id>/', views.donar_a_campana, name='donar_a_campana'),
+    path('editar-campana/<int:id>/', views.editar_campana, name='editar_campana'),
+    path('eliminar-campana/<int:id>/', views.eliminar_campana, name='eliminar_campana'),
 
     # Logo de fundación
     path('fundacion/<int:id_fundacion>/actualizar-logo/', views.actualizar_logo_fundacion, name='actualizar_logo_fundacion'),
