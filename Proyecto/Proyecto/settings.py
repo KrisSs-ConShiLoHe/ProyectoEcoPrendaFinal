@@ -15,6 +15,10 @@ import os
 # Bases de datos
 import dj_database_url
 from dotenv import load_dotenv
+import logging # Asegúrate de tener esta línea
+
+# Define el logger para este archivo:
+logger = logging.getLogger(__name__)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -350,4 +354,4 @@ if not DEBUG:
     X_FRAME_OPTIONS = 'DENY'
 
 print(f"DEBUG CLARIFAI_PAT: {os.environ.get('CLARIFAI_PAT')}")
-logger.warning(f"LOG CLARIFAI_PAT: {os.environ.get('CLARIFAI_PAT')}")
+logging.warning(f"LOG CLARIFAI_PAT: {os.environ.get('CLARIFAI_PAT')}")

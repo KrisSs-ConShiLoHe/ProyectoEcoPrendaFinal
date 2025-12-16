@@ -6,6 +6,10 @@ Usa SQLite en lugar de PostgreSQL remoto.
 
 import os
 from pathlib import Path
+import logging # Asegúrate de tener esta línea
+
+# Define el logger para este archivo:
+logger = logging.getLogger(__name__)
 # xsxsxsxsxs
 # Configuraciones básicas
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -191,5 +195,5 @@ CLARIFAI_APP_ID = None
 CLARIFAI_MODEL_ID = None
 CLARIFAI_MODEL_VERSION_ID = None
 
-print(f"DEBUG CLARIFAI_PAT: {os.environ.get('CLARIFAI_PAT')}")
-logger.warning(f"LOG CLARIFAI_PAT: {os.environ.get('CLARIFAI_PAT')}")
+
+logging.warning(f"LOG CLARIFAI_PAT: {os.environ.get('CLARIFAI_PAT')}")
