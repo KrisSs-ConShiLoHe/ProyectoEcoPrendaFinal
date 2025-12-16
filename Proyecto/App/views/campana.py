@@ -96,14 +96,14 @@ def campanas_solidarias(request):
     return render(request, 'campañas/campanas_solidarias.html', context)
 
 @login_required_custom
-def detalle_campana(request, id_campana):
+def detalle_campana(request, id):
     """Detalle de una campaña solidaria de una fundación."""
     usuario = get_usuario_actual(request)
-    campana = get_object_or_404(CampanaFundacion, pk=id_campana)
-    donaciones = Transaccion.objects.filter(campana=campana, tipo__nombre_tipo='Donación')
+    campana = get_object_or_404(CampanaFundacion, pk=id)
+    donaciones = Transaccion.objects.filter(campana=campana, tipo__nombre_tipo='Donación', estado='COMPLETADA')
     prendas_donadas = [don.prenda for don in donaciones if don.prenda]
     avance = len(prendas_donadas)
-    porcentaje_avance = int(100 * avance / campana.objetivo_prendas) if campana.objetivo_prendas else 0
+    porcentaje_avance = int(100 * avance / campana.objetivo_prendas) if campana.objetivo_prendas and campana.objetivo_prendas > 0 else 0
     context = {
         'usuario': usuario,
         'campana': campana,
@@ -114,16 +114,16 @@ def detalle_campana(request, id_campana):
     return render(request, 'campañas/detalle_campana.html', context)
 
 @login_required_custom
-def donar_a_campana(request, id_campana):
+def donar_a_campana(request, id):
     """Permite donar una prenda a una campaña solidaria."""
     usuario = get_usuario_actual(request)
-    campana = get_object_or_404(CampanaFundacion, pk=id_campana, activa=True)
+    campana = get_object_or_404(CampanaFundacion, pk=id, activa=True)
     if request.method == 'POST':
         prenda_id = request.POST.get('prenda_id')
         prenda = get_object_or_404(Prenda, pk=prenda_id, user=usuario, estado='DISPONIBLE')
         if not prenda.esta_disponible():
             messages.error(request, 'La prenda ya no está disponible.')
-            return redirect('donar_a_campana', id_campana=id_campana)
+            return redirect('donar_a_campana', id=id)
         tipo_donacion, _ = TipoTransaccion.objects.get_or_create(nombre_tipo='Donación')
         Transaccion.objects.create(
             prenda=prenda,

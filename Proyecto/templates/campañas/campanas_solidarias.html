@@ -31,18 +31,18 @@
                             <p class="card-text">{{ campana.descripcion|truncatechars:160 }}</p>
                             <div class="mt-auto">
                                 <div class="mb-2">
-                                    <progress class="w-100" 
-                                              value="{{ campana.prendas_donadas|default:0 }}" 
+                                    <progress class="w-100"
+                                              value="{{ campana.prendas_donadas }}"
                                               max="{{ campana.objetivo_prendas }}"
                                               style="height: 18px;">
-                                        {{ campana.prendas_donadas|default:0 }}/{{ campana.objetivo_prendas }}
+                                        {{ campana.prendas_donadas }}/{{ campana.objetivo_prendas }}
                                     </progress>
                                 </div>
 
-                                <a href="{% url 'detalle_campana' campana.id_campana %}" class="btn btn-outline-primary btn-sm w-100 mb-1">
+                                <a href="{% url 'detalle_campana' campana.id %}" class="btn btn-outline-primary btn-sm w-100 mb-1">
                                     Ver detalles
                                 </a>
-                                <a href="{% url 'donar_a_campana' campana.id_campana %}" class="btn btn-primary btn-sm w-100">
+                                <a href="{% url 'donar_a_campana' campana.id %}" class="btn btn-primary btn-sm w-100">
                                     Donar a esta campaña
                                 </a>
                             </div>

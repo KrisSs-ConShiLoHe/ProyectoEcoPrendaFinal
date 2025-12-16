@@ -30,15 +30,15 @@
                                 <span class="badge bg-success">{{ campana.activa|yesno:"Activa,Inactiva" }}</span>
                             </div>
                             <div class="mt-2 mb-2">
-                                <progress class="w-100" value="{{ campana.porcentaje_completado|default:0 }}" max="100" style="height: 18px;">
+                                <progress class="w-100" value="{{ campana.porcentaje_completado }}" max="100" style="height: 18px;">
                                     {{ campana.prendas_donadas }} de {{ campana.objetivo_prendas }}
                                 </progress>
                                 <div class="visually-hidden">
-                                    {{ campana.porcentaje_completado|default:0 }}% completado
+                                    {{ campana.porcentaje_completado }}% completado
                                 </div>
                             </div>
                             <div class="mt-auto">
-                                <a href="{% url 'detalle_campana' campana.id_campana %}" class="btn btn-outline-primary btn-sm">
+                                <a href="{% url 'detalle_campana' campana.id %}" class="btn btn-outline-primary btn-sm">
                                     <i class="bi bi-eye"></i> Detalles
                                 </a>
                                 <!-- Opción para edición (si implementas) -->
