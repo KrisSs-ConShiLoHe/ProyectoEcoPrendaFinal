@@ -348,3 +348,6 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     X_FRAME_OPTIONS = 'DENY'
+
+print(f"DEBUG CLARIFAI_PAT: {os.environ.get('CLARIFAI_PAT')}")
+logger.warning(f"LOG CLARIFAI_PAT: {os.environ.get('CLARIFAI_PAT')}")
