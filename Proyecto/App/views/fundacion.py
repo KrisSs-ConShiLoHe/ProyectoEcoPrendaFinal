@@ -195,7 +195,7 @@ def estadisticas_donaciones(request):
     usuario = get_usuario_actual(request)
     fundacion = usuario.fundacion_asignada
     donaciones = Transaccion.objects.filter(fundacion=fundacion, tipo__nombre_tipo='Donación', prenda__isnull=False).select_related('prenda', 'user_origen')
-    resumen = donaciones.values('estado').annotate(total=Count('id'))
+    resumen = donaciones.values('estado').annotate(total=Count('id_transaccion'))
     prendas = Prenda.objects.filter(pk__in=Transaccion.objects.filter(fundacion=fundacion, prenda__isnull=False).values_list('prenda_id', flat=True))
     context = {
         'fundacion': fundacion,

@@ -7,6 +7,7 @@ from django import forms  # Agregado para forms
 import hashlib
 import json
 import logging  # Agregado para logging
+from datetime import datetime
 
 from ..models import (
     Usuario, Prenda, Transaccion, TipoTransaccion, 
@@ -72,13 +73,21 @@ def crear_campana(request):
         if not all([nombre, fecha_inicio, fecha_fin, objetivo_prendas > 0]):
             messages.error(request, 'Completa los campos obligatorios y un objetivo mayor a 0.')
         else:
+            # Convertir fechas a timezone-aware
+            try:
+                fecha_inicio_dt = timezone.make_aware(datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M:%S'))
+                fecha_fin_dt = timezone.make_aware(datetime.strptime(fecha_fin, '%Y-%m-%d %H:%M:%S'))
+            except ValueError:
+                messages.error(request, 'Formato de fecha inválido. Usa YYYY-MM-DD HH:MM:SS.')
+                return render(request, 'campañas/crear_campana.html', {'usuario': usuario, 'fundacion': fundacion})
+
             # Crear la campaña primero
             campana = CampanaFundacion.objects.create(
                 fundacion=fundacion,
                 nombre=nombre,
                 descripcion=descripcion,
-                fecha_inicio=fecha_inicio,
-                fecha_fin=fecha_fin,
+                fecha_inicio=fecha_inicio_dt,
+                fecha_fin=fecha_fin_dt,
                 objetivo_prendas=objetivo_prendas,
                 categorias_solicitadas=categorias_solicitadas,
                 activa=True
@@ -194,10 +203,18 @@ def editar_campana(request, id):
         if not all([nombre, fecha_inicio, fecha_fin, objetivo_prendas > 0]):
             messages.error(request, 'Completa los campos obligatorios y un objetivo mayor a 0.')
         else:
+            # Convertir fechas a timezone-aware
+            try:
+                fecha_inicio_dt = timezone.make_aware(datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M:%S'))
+                fecha_fin_dt = timezone.make_aware(datetime.strptime(fecha_fin, '%Y-%m-%d %H:%M:%S'))
+            except ValueError:
+                messages.error(request, 'Formato de fecha inválido. Usa YYYY-MM-DD HH:MM:SS.')
+                return render(request, 'campañas/editar_campana.html', {'usuario': usuario, 'campana': campana, 'fundacion': usuario.fundacion_asignada})
+
             campana.nombre = nombre
             campana.descripcion = descripcion
-            campana.fecha_inicio = fecha_inicio
-            campana.fecha_fin = fecha_fin
+            campana.fecha_inicio = fecha_inicio_dt
+            campana.fecha_fin = fecha_fin_dt
             campana.objetivo_prendas = objetivo_prendas
             campana.categorias_solicitadas = categorias_solicitadas
 

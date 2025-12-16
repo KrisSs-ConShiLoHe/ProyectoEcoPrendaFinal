@@ -7,3 +7,4 @@
 - [x] Actualizar vista de creación de campaña para manejar subida de imagen.
 - [x] Agregar enctype="multipart/form-data" en formularios de creación y edición de campaña.
 - [x] Agregar campo categorias_solicitadas en vista de creación de campaña.
+- [x] **FIXED: RuntimeWarning naive datetime in CampanaFundacion views** - Added timezone.make_aware() conversion for fecha_inicio and fecha_fin in both crear_campana and editar_campana functions to prevent naive datetime warnings.
