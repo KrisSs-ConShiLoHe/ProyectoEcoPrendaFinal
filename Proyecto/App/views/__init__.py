@@ -90,6 +90,8 @@ from .campana import (
     detalle_campana,
     donar_a_campana,
     mis_campanas,
+    editar_campana,
+    eliminar_campana,
 )
 
 from .api_y_galeria import (

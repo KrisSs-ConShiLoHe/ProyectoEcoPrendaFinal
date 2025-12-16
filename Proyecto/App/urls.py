@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views.campana import editar_campana, eliminar_campana
 
 urlpatterns = [
     # Home y navegación
