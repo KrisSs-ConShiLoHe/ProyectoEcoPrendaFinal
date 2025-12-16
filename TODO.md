@@ -1,10 +1,16 @@
-# TODO: Agregar botones de editar y eliminar en tarjetas de campaña y campo de imagen
+# Fix Profile Image Storage Issue
 
-- [x] Modificar la plantilla `Proyecto/templates/campañas/mis_campanas.html` para agregar botones de editar y eliminar junto al botón de detalles en las tarjetas de campaña.
-- [x] Corregir error de sintaxis en `Proyecto/templates/campañas/editar_campana.html` para el campo fecha_fin.
-- [x] Agregar campo de imagen en el formulario de edición de campaña.
-- [x] Actualizar vista de edición de campaña para manejar subida de imagen.
-- [x] Actualizar vista de creación de campaña para manejar subida de imagen.
-- [x] Agregar enctype="multipart/form-data" en formularios de creación y edición de campaña.
-- [x] Agregar campo categorias_solicitadas en vista de creación de campaña.
-- [x] **FIXED: RuntimeWarning naive datetime in CampanaFundacion views** - Added timezone.make_aware() conversion for fecha_inicio and fecha_fin in both crear_campana and editar_campana functions to prevent naive datetime warnings.
+## Current Problem
+- Profile images are being uploaded to Cloudinary and full URLs stored in Django's ImageField
+- ImageField expects relative paths, not full URLs
+- Template uses {{ usuario.imagen_usuario.url }} which prepends MEDIA_URL to the stored path
+- Results in malformed URLs like /media/https:/res.cloudinary.com/...
+
+## Tasks
+- [ ] Modify `actualizar_foto_perfil` function in `Proyecto/App/views/auth.py`
+  - Remove Cloudinary import and usage
+  - Save image directly to ImageField using local storage
+  - Keep image validation
+- [ ] Test that images are saved to `media/usuarios/` directory
+- [ ] Verify template displays images correctly
+- [ ] Update any related tests if needed

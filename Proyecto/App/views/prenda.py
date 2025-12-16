@@ -298,6 +298,11 @@ def eliminar_prenda(request, id_prenda):
 def mis_prendas(request):
     """Lista todas las prendas del usuario cliente."""
     usuario = get_usuario_actual(request)
+
+    if usuario.es_representante_fundacion():
+        messages.error(request, 'Como representante de fundación, no puedes acceder a tus prendas personales.')
+        return redirect('home')
+
     prendas = Prenda.objects.filter(user=usuario).order_by('-fecha_publicacion')
     
     # Enriquecer cada prenda con flags de permisos

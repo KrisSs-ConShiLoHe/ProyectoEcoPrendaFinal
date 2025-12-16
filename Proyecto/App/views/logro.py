@@ -135,6 +135,11 @@ def desbloquear_logro(request, codigo_logro):
 def mis_logros(request):
     """Vista de todos los logros obtenidos por el usuario."""
     usuario = get_usuario_actual(request)
+
+    if usuario.es_representante_fundacion():
+        messages.error(request, 'Como representante de fundación, no puedes acceder a tus logros personales.')
+        return redirect('home')
+
     logros = UsuarioLogro.objects.filter(user=usuario).select_related('logro')
     context = {
         'usuario': usuario,

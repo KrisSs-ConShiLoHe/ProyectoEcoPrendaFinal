@@ -323,7 +323,11 @@ def donar_prenda(request, id_prenda):
 @login_required_custom
 def mis_transacciones(request):
     usuario = get_usuario_actual(request)
-    
+
+    if usuario.es_representante_fundacion():
+        messages.error(request, 'Como representante de fundación, no puedes acceder a tus transacciones personales.')
+        return redirect('home')
+
     transacciones_enviadas = Transaccion.objects.filter(
         user_origen=usuario  # Cambiado: 'user_origen=usuario'
     ).select_related('prenda', 'tipo', 'user_destino', 'fundacion')  # Agregado select_related

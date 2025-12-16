@@ -345,9 +345,8 @@ def actualizar_foto_perfil(request):
             return redirect('perfil')
 
         try:
-            from ..cloudinary_utils import subir_imagen_usuario
-            resultado = subir_imagen_usuario(imagen, usuario.id_usuario)
-            usuario.imagen_usuario = resultado['secure_url']
+            # Save image directly to ImageField (local storage)
+            usuario.imagen_usuario = imagen
             usuario.save()
             logger.info(f"Foto de perfil de usuario {usuario.id_usuario} actualizada exitosamente")
             messages.success(request, 'Foto de perfil actualizada.')
