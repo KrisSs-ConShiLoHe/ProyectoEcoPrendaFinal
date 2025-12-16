@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Campaña{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Editar Campaña Solidaria</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre de la Campaña</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" value="{{ campana.nombre }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required>{{ campana.descripcion }}</textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
+                                <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" value="{{ campana.fecha_inicio|date:'Y-m-d' }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="fecha_fin" class="form-label">Fecha de Fin</label>
+                                <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" value="{{ campana.fecha_fin|date:'Y-m-d' if campana.fecha_fin else '' }}">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="objetivo_prendas" class="form-label">Objetivo de Prendas</label>
+                            <input type="number" class="form-control" id="objetivo_prendas" name="objetivo_prendas" value="{{ campana.objetivo_prendas }}" min="1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categorias_solicitadas" class="form-label">Categorías Solicitadas</label>
+                            <input type="text" class="form-control" id="categorias_solicitadas" name="categorias_solicitadas" value="{{ campana.categorias_solicitadas }}" placeholder="Ej: Ropa de invierno, zapatos, etc.">
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'mis_campanas' %}" class="btn btn-secondary me-md-2">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Actualizar Campaña</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

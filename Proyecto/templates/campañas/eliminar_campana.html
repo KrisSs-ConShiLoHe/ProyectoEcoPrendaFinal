@@ -1,47 +1,26 @@
 {% extends 'base.html' %}
 
-{% block title %}Eliminar Campaña - EcoPrenda{% endblock %}
+{% block title %}Eliminar Campaña{% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card shadow border-danger">
+            <div class="card">
                 <div class="card-header bg-danger text-white">
-                    <h4 class="mb-0">
-                        <i class="bi bi-exclamation-triangle"></i> Eliminar Campaña
-                    </h4>
+                    <h2 class="mb-0">Eliminar Campaña Solidaria</h2>
                 </div>
                 <div class="card-body">
-                    <div class="alert alert-danger">
-                        <h5>¿Estás seguro de que deseas eliminar esta campaña?</h5>
-                        <p class="mb-0">Esta acción no se puede deshacer.</p>
+                    <p class="lead">¿Estás seguro de que deseas eliminar la campaña "<strong>{{ campana.nombre }}</strong>"?</p>
+                    <p class="text-muted">Esta acción no se puede deshacer. Todas las donaciones asociadas a esta campaña permanecerán en el sistema, pero ya no estarán vinculadas a esta campaña.</p>
+                    <div class="alert alert-warning">
+                        <strong>Advertencia:</strong> Si hay donaciones en proceso o completadas asociadas a esta campaña, se mantendrán en el sistema pero perderán la referencia a la campaña.
                     </div>
-
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h6 class="card-title">{{ campana.nombre }}</h6>
-                            <p class="card-text">{{ campana.descripcion }}</p>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <strong>Fundación:</strong> {{ campana.fundacion.nombre }}
-                                </div>
-                                <div class="col-sm-6">
-                                    <strong>Objetivo:</strong> {{ campana.objetivo_prendas }} prendas
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <form method="post">
                         {% csrf_token %}
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-danger">
-                                <i class="bi bi-trash"></i> Sí, Eliminar Campaña
-                            </button>
-                            <a href="{% url 'mis_campanas' %}" class="btn btn-secondary">
-                                <i class="bi bi-arrow-left"></i> Cancelar
-                            </a>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'mis_campanas' %}" class="btn btn-secondary me-md-2">Cancelar</a>
+                            <button type="submit" class="btn btn-danger">Eliminar Campaña</button>
                         </div>
                     </form>
                 </div>
