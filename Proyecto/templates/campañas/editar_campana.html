@@ -11,7 +11,7 @@
                     <h2 class="mb-0">Editar Campaña Solidaria</h2>
                 </div>
                 <div class="card-body">
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre de la Campaña</label>
@@ -20,6 +20,18 @@
                         <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripción</label>
                             <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required>{{ campana.descripcion }}</textarea>
+                        </div>
+                        <!-- Imagen de la campaña -->
+                        <div class="mb-3">
+                            <label for="imagen_campana" class="form-label">Imagen de la campaña</label>
+                            <input class="form-control" type="file" id="imagen_campana" name="imagen_campana" accept="image/*">
+                            <div class="form-text">Formatos permitidos: JPG, PNG, GIF. Tamaño máx. 10MB</div>
+                            {% if campana.imagen_campana %}
+                                <div class="mt-2">
+                                    <small class="text-muted">Imagen actual:</small><br>
+                                    <img src="{{ campana.imagen_campana }}" alt="Imagen actual" class="img-thumbnail" style="max-width: 200px;">
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">

@@ -67,18 +67,36 @@ def crear_campana(request):
         fecha_inicio = request.POST.get('fecha_inicio')
         fecha_fin = request.POST.get('fecha_fin')
         objetivo_prendas = int(request.POST.get('objetivo_prendas', 0))
+        categorias_solicitadas = request.POST.get('categorias_solicitadas', '')
+
         if not all([nombre, fecha_inicio, fecha_fin, objetivo_prendas > 0]):
             messages.error(request, 'Completa los campos obligatorios y un objetivo mayor a 0.')
         else:
-            CampanaFundacion.objects.create(
+            # Crear la campaña primero
+            campana = CampanaFundacion.objects.create(
                 fundacion=fundacion,
                 nombre=nombre,
                 descripcion=descripcion,
                 fecha_inicio=fecha_inicio,
                 fecha_fin=fecha_fin,
                 objetivo_prendas=objetivo_prendas,
+                categorias_solicitadas=categorias_solicitadas,
                 activa=True
             )
+
+            # Manejar la imagen de la campaña
+            if 'imagen_campana' in request.FILES:
+                imagen = request.FILES['imagen_campana']
+                if validar_imagen(imagen):
+                    try:
+                        url_imagen = subir_imagen_campana(imagen, campana.nombre)
+                        campana.imagen_campana = url_imagen
+                        campana.save()
+                    except Exception as e:
+                        messages.warning(request, f'Error al subir imagen: {str(e)}')
+                else:
+                    messages.error(request, 'Imagen no válida. Formatos permitidos: JPG, PNG, GIF. Tamaño máx. 10MB')
+
             messages.success(request, '¡Campaña creada exitosamente!')
             return redirect('panel_fundacion')
     context = {'usuario': usuario, 'fundacion': fundacion}
@@ -182,6 +200,19 @@ def editar_campana(request, id):
             campana.fecha_fin = fecha_fin
             campana.objetivo_prendas = objetivo_prendas
             campana.categorias_solicitadas = categorias_solicitadas
+
+            # Manejar la imagen de la campaña
+            if 'imagen_campana' in request.FILES:
+                imagen = request.FILES['imagen_campana']
+                if validar_imagen(imagen):
+                    try:
+                        url_imagen = subir_imagen_campana(imagen, campana.nombre)
+                        campana.imagen_campana = url_imagen
+                    except Exception as e:
+                        messages.warning(request, f'Error al subir imagen: {str(e)}')
+                else:
+                    messages.error(request, 'Imagen no válida. Formatos permitidos: JPG, PNG, GIF. Tamaño máx. 10MB')
+
             campana.save()
             messages.success(request, '¡Campaña actualizada exitosamente!')
             return redirect('mis_campanas')
