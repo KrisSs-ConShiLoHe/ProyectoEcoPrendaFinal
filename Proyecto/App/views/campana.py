@@ -158,3 +158,55 @@ def mis_campanas(request):
         'campanas': campanas,
     }
     return render(request, 'campañas/mis_campanas.html', context)
+
+@representante_fundacion_required
+def editar_campana(request, id):
+    """Permite editar una campaña existente."""
+    usuario = get_usuario_actual(request)
+    campana = get_object_or_404(CampanaFundacion, pk=id, fundacion=usuario.fundacion_asignada)
+
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        descripcion = request.POST.get('descripcion')
+        fecha_inicio = request.POST.get('fecha_inicio')
+        fecha_fin = request.POST.get('fecha_fin')
+        objetivo_prendas = int(request.POST.get('objetivo_prendas', 0))
+        categorias_solicitadas = request.POST.get('categorias_solicitadas', '')
+
+        if not all([nombre, fecha_inicio, fecha_fin, objetivo_prendas > 0]):
+            messages.error(request, 'Completa los campos obligatorios y un objetivo mayor a 0.')
+        else:
+            campana.nombre = nombre
+            campana.descripcion = descripcion
+            campana.fecha_inicio = fecha_inicio
+            campana.fecha_fin = fecha_fin
+            campana.objetivo_prendas = objetivo_prendas
+            campana.categorias_solicitadas = categorias_solicitadas
+            campana.save()
+            messages.success(request, '¡Campaña actualizada exitosamente!')
+            return redirect('mis_campanas')
+
+    context = {
+        'usuario': usuario,
+        'campana': campana,
+        'fundacion': usuario.fundacion_asignada
+    }
+    return render(request, 'campañas/editar_campana.html', context)
+
+@representante_fundacion_required
+def eliminar_campana(request, id):
+    """Permite eliminar una campaña."""
+    usuario = get_usuario_actual(request)
+    campana = get_object_or_404(CampanaFundacion, pk=id, fundacion=usuario.fundacion_asignada)
+
+    if request.method == 'POST':
+        campana.delete()
+        messages.success(request, 'Campaña eliminada exitosamente.')
+        return redirect('mis_campanas')
+
+    context = {
+        'usuario': usuario,
+        'campana': campana,
+        'fundacion': usuario.fundacion_asignada
+    }
+    return render(request, 'campañas/eliminar_campana.html', context)
