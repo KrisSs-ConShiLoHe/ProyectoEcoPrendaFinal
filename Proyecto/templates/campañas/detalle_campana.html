@@ -43,9 +43,11 @@
                             <div class="text-center mt-1">{{ porcentaje_avance }}%</div>
                         </div>
                     </div>
+                    {% if usuario.rol == 'CLIENTE' %}
                     <a href="{% url 'donar_a_campana' campana.id %}" class="btn btn-success w-100 fw-bold mt-3">
                         <i class="bi bi-gift"></i> Donar Prenda a esta Campaña
                     </a>
+                    {% endif %}
                 </div>
             </div>
             <div class="card mt-3">
