@@ -166,6 +166,8 @@ __all__ = [
     'detalle_campana',
     'donar_a_campana',
     'mis_campanas',
+    'editar_campana',
+    'eliminar_campana',
     'galeria_imagenes',
     'informe_impacto',
     'comparador_impacto',
